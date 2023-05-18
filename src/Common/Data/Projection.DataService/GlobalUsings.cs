@@ -1,0 +1,9 @@
+﻿global using System;
+global using System.Data;
+global using Projection.Common.BaseEntities;
+global using Projection.Common.DataService.Extensions;
+global using Projection.Common.DataService.Interfaces;
+global using Projection.Common.DataService.Contexts;
+global using MediatR;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore.Storage;

@@ -10,3 +10,5 @@ src/*/*/.DS_Store
 src/*/*/*/.vs/
 src/*/*/obj/
 */.DS_Store
+src/*/*/*/.DS_Store
+src/*/*/*/*/.DS_Store

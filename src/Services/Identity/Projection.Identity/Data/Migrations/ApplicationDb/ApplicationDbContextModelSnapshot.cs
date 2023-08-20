@@ -18,7 +18,7 @@ namespace Projection.Identity.Data.Migrations.ApplicationDb
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("public")
-                .HasAnnotation("ProductVersion", "7.0.5")
+                .HasAnnotation("ProductVersion", "7.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -111,6 +111,15 @@ namespace Projection.Identity.Data.Migrations.ApplicationDb
                     b.HasIndex("UserId");
 
                     b.ToTable("AspNetUserClaims", "public");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ClaimType = "TenancyJson",
+                            ClaimValue = "{\"Id\": \"18ce327c-720e-4c87-b0b1-756eabb37c7b\",\"Name\": \"Tenant1\",\"DefaultConnection\": \"Host=192.168.1.19;Port=5432;Database=Projection.Accounting.Dev.Tenant1;User Id=sa;Password=Radeon1GB#;\"}",
+                            UserId = "c0aab6ba-cd71-4010-a9dc-e246997d6183"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -266,7 +275,7 @@ namespace Projection.Identity.Data.Migrations.ApplicationDb
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN.PROJECTION@HOTMAIL.COM",
                             NormalizedUserName = "+919888888888",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFbXOBuLXlKD8duNXcLajnz+nvHGoPa054dWQK8RrxQtJo75IpLzkQ0FiWdC9i2Q7w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENrO+IV4Mo2T4YUvwnBhkTE189D+y4acr+qJhXPQVRtKz4/5vjRl3LvWlH3XteDc9g==",
                             PhoneNumber = "+919888888888",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "124d2334-c5f6-4163-922c-7c6cf18833e1",

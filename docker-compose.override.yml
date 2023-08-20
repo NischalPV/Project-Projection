@@ -1,0 +1,46 @@
+version: '3.4'
+
+services:
+  seq:
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - "5340:80"
+
+  rabbitmq:
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
+  projection.identity:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - WebApiUrl=http://${PROJECTION_EXTERNAL_DNS_NAME_OR_IP}:6002
+    ports:
+      - "5100:80"
+    volumes:
+      - ~/.aspnet/https:/root/.aspnet/https:ro
+      - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
+  projection.accounting:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - IdentityUrl=http://${PROJECTION_EXTERNAL_DNS_NAME_OR_IP}:5100
+      - ExternalIdentityUrl=http://${PROJECTION_EXTERNAL_DNS_NAME_OR_IP}:5100
+      - OAuthClientId=projection-accounting-api
+    ports:
+      - "6002:80"
+    volumes:
+      - ~/.aspnet/https:/root/.aspnet/https:ro
+      - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
+
+  projection.apigateway:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+      - "8003:80"
+    volumes:
+      - ~/.aspnet/https:/root/.aspnet/https:ro
+      - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro

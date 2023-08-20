@@ -23,11 +23,11 @@ public class ProfileService : IProfileService
         if (user == null)
             throw new ArgumentException("Invalid subject identifier");
 
-        var claims = GetClaimsFromUser(user);
+        var claims = await GetClaimsFromUser(user);
         context.IssuedClaims = claims.ToList();
     }
 
-    public IEnumerable<Claim> GetClaimsFromUser(ApplicationUser user)
+    public async Task<IEnumerable<Claim>> GetClaimsFromUser(ApplicationUser user)
     {
         var claims = new List<Claim>
         {
@@ -69,6 +69,11 @@ public class ProfileService : IProfileService
                 new Claim(JwtClaimTypes.PhoneNumberVerified, user.PhoneNumberConfirmed ? "true" : "false", ClaimValueTypes.Boolean)
             });
         }
+
+        // Add tenancy claims
+        var userClaims = await _userManager.GetClaimsAsync(user);
+
+        claims.AddRange(userClaims);
 
 
         return claims;

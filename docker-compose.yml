@@ -1,0 +1,32 @@
+version: '3.4'
+
+services:
+  seq:
+    image: datalust/seq:latest
+    container_name: Seq
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: RabbitMQ
+
+  projection.identity:
+    image: projection-identity
+    build:
+      context: .
+      dockerfile: src/Services/Identity/Projection.Identity/Dockerfile
+
+  projection.accounting:
+    image: projection-accounting
+    build:
+      context: .
+      dockerfile: src/Services/Accounting/Projection.Accounting/Dockerfile
+    depends_on:
+      - projection.identity
+      - rabbitmq
+
+  projection.apigateway:
+    image: projection-apigateway
+    build:
+      context: .
+      dockerfile: src/ApiGateway/Projection.ApiGateway/Dockerfile
+

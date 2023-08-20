@@ -1,5 +1,9 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Projection.Common.BaseEntities;
 
+
+[Table("Statuses", Schema = "public")]
 public record Status
 {
     public int Id { get; set; }

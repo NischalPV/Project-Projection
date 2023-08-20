@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!--<Nullable>enable</Nullable>-->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Projection.Accounting.Core\Projection.Accounting.Core.csproj" />
+    <ProjectReference Include="..\..\..\Common\Data\Projection.DataService\Projection.DataService.csproj" />
+    <ProjectReference Include="..\..\..\Common\Constants\Projection.GlobalConstants\Projection.GlobalConstants.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\" />
+  </ItemGroup>
+</Project>

@@ -100,8 +100,8 @@ public class IdentityServer
             {
                 new ApiScope()
                 {
-                    Name = "API",
-                    DisplayName = "API Scope",
+                    Name = "AccountingAPI",
+                    DisplayName = "Accounting API Scope",
                     Enabled = true,
                     Required = false,
                     Emphasize = false,
@@ -122,7 +122,7 @@ public class IdentityServer
                 {
                     Id = 1,
                     ApiResourceId = 1,
-                    Scope = "API"
+                    Scope = "AccountingAPI"
                 },
             };
     }
@@ -330,7 +330,7 @@ public class IdentityServer
                 {
                     Id = 2,
                     Enabled = true,
-                    ClientId = "projection-api",
+                    ClientId = "projection-accounting-api",
                     ProtocolType = "oidc",
                     RequireClientSecret = true,
                     ClientName = "Projection API Swagger UI",
@@ -378,7 +378,7 @@ public class IdentityServer
                 {
                     Id = 4,
                     Enabled = true,
-                    ClientId = "projection-api--prod",
+                    ClientId = "projection-accounting-api--prod",
                     ProtocolType = "oidc",
                     RequireClientSecret = true,
                     ClientName = "Projection API Swagger UI",
@@ -504,7 +504,7 @@ public class IdentityServer
                 {
                     Id = 4,
                     ClientId = 2,
-                    Scope = "API"
+                    Scope = "AccountingAPI"
                 },
                 new ClientScope()
                 {
@@ -516,7 +516,7 @@ public class IdentityServer
                 {
                     Id = 8,
                     ClientId = 4,
-                    Scope = "API"
+                    Scope = "AccountingAPI"
                 },
             };
     }
@@ -539,7 +539,7 @@ public class IdentityServer
                 {
                     Id = 2,
                     ClientId = 2,
-                    GrantType = "authorization_code"
+                    GrantType = "implicit"
                 },
                 new ClientGrantType()
                 {
@@ -574,7 +574,7 @@ public class IdentityServer
                 {
                     Id = 2,
                     ClientId = 2,
-                    PostLogoutRedirectUri = $"http://localhost:6002/docs/"
+                    PostLogoutRedirectUri = $"http://localhost:6002/swagger/"
                 },
                 new ClientPostLogoutRedirectUri()
                 {
@@ -610,7 +610,7 @@ public class IdentityServer
                 {
                     Id = 2,
                     ClientId = 2,
-                    RedirectUri = $"http://localhost:6002/docs/oauth2-redirect"
+                    RedirectUri = $"http://localhost:6002/swagger/oauth2-redirect.html"
                 },
                 new ClientRedirectUri()
                 {
@@ -622,7 +622,7 @@ public class IdentityServer
                 {
                     Id = 4,
                     ClientId = 4,
-                    RedirectUri = $"https://projection360-api.azurewebsites.net/docs/oauth2-redirect"
+                    RedirectUri = $"https://projection360-api.azurewebsites.net/swagger/oauth2-redirect.html"
                 },
             };
 

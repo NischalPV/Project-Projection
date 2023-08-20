@@ -17,7 +17,7 @@ namespace Projection.Identity.Data.Migrations.IdentityServer.ConfigurationDb
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.5")
+                .HasAnnotation("ProductVersion", "7.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -170,7 +170,7 @@ namespace Projection.Identity.Data.Migrations.IdentityServer.ConfigurationDb
                         {
                             Id = 1,
                             ApiResourceId = 1,
-                            Scope = "API"
+                            Scope = "AccountingAPI"
                         });
                 });
 
@@ -268,11 +268,11 @@ namespace Projection.Identity.Data.Migrations.IdentityServer.ConfigurationDb
                         new
                         {
                             Id = 1,
-                            Created = new DateTime(2023, 5, 22, 5, 55, 14, 273, DateTimeKind.Utc).AddTicks(6420),
-                            DisplayName = "API Scope",
+                            Created = new DateTime(2023, 7, 25, 10, 30, 59, 249, DateTimeKind.Utc).AddTicks(8310),
+                            DisplayName = "Accounting API Scope",
                             Emphasize = false,
                             Enabled = true,
-                            Name = "API",
+                            Name = "AccountingAPI",
                             NonEditable = false,
                             Required = false,
                             ShowInDiscoveryDocument = true
@@ -608,7 +608,7 @@ namespace Projection.Identity.Data.Migrations.IdentityServer.ConfigurationDb
                             AuthorizationCodeLifetime = 300,
                             BackChannelLogoutSessionRequired = true,
                             ClientClaimsPrefix = "client_",
-                            ClientId = "projection-api",
+                            ClientId = "projection-accounting-api",
                             ClientName = "Projection API Swagger UI",
                             Created = new DateTime(2022, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             DPoPClockSkew = new TimeSpan(0, 0, 5, 0, 0),
@@ -647,7 +647,7 @@ namespace Projection.Identity.Data.Migrations.IdentityServer.ConfigurationDb
                             AuthorizationCodeLifetime = 300,
                             BackChannelLogoutSessionRequired = true,
                             ClientClaimsPrefix = "client_",
-                            ClientId = "projection-api--prod",
+                            ClientId = "projection-accounting-api--prod",
                             ClientName = "Projection API Swagger UI",
                             Created = new DateTime(2022, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             DPoPClockSkew = new TimeSpan(0, 0, 5, 0, 0),
@@ -786,7 +786,7 @@ namespace Projection.Identity.Data.Migrations.IdentityServer.ConfigurationDb
                         {
                             Id = 2,
                             ClientId = 2,
-                            GrantType = "authorization_code"
+                            GrantType = "implicit"
                         },
                         new
                         {
@@ -860,7 +860,7 @@ namespace Projection.Identity.Data.Migrations.IdentityServer.ConfigurationDb
                         {
                             Id = 2,
                             ClientId = 2,
-                            PostLogoutRedirectUri = "http://localhost:6002/docs/"
+                            PostLogoutRedirectUri = "http://localhost:6002/swagger/"
                         },
                         new
                         {
@@ -939,7 +939,7 @@ namespace Projection.Identity.Data.Migrations.IdentityServer.ConfigurationDb
                         {
                             Id = 2,
                             ClientId = 2,
-                            RedirectUri = "http://localhost:6002/docs/oauth2-redirect"
+                            RedirectUri = "http://localhost:6002/swagger/oauth2-redirect.html"
                         },
                         new
                         {
@@ -951,7 +951,7 @@ namespace Projection.Identity.Data.Migrations.IdentityServer.ConfigurationDb
                         {
                             Id = 4,
                             ClientId = 4,
-                            RedirectUri = "https://projection360-api.azurewebsites.net/docs/oauth2-redirect"
+                            RedirectUri = "https://projection360-api.azurewebsites.net/swagger/oauth2-redirect.html"
                         });
                 });
 
@@ -1013,7 +1013,7 @@ namespace Projection.Identity.Data.Migrations.IdentityServer.ConfigurationDb
                         {
                             Id = 4,
                             ClientId = 2,
-                            Scope = "API"
+                            Scope = "AccountingAPI"
                         },
                         new
                         {
@@ -1025,7 +1025,7 @@ namespace Projection.Identity.Data.Migrations.IdentityServer.ConfigurationDb
                         {
                             Id = 8,
                             ClientId = 4,
-                            Scope = "API"
+                            Scope = "AccountingAPI"
                         });
                 });
 
@@ -1071,7 +1071,7 @@ namespace Projection.Identity.Data.Migrations.IdentityServer.ConfigurationDb
                         {
                             Id = 1,
                             ClientId = 2,
-                            Created = new DateTime(2023, 5, 22, 5, 55, 14, 273, DateTimeKind.Utc).AddTicks(6950),
+                            Created = new DateTime(2023, 7, 25, 10, 30, 59, 249, DateTimeKind.Utc).AddTicks(8880),
                             Type = "SharedSecret",
                             Value = "projection@2023"
                         });

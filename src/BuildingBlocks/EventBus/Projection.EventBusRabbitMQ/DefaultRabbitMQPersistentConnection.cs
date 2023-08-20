@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Http;
+using Projection.Common.BaseEntities;
 using RabbitMQ.Client;
 
 namespace Projection.BuildingBlocks.EventBusRabbitMQ;
@@ -5,19 +7,21 @@ namespace Projection.BuildingBlocks.EventBusRabbitMQ;
 public class DefaultRabbitMQPersistentConnection
        : IRabbitMQPersistentConnection
 {
-    private readonly IConnectionFactory _connectionFactory;
+    private readonly ConnectionFactory _connectionFactory;
     private readonly ILogger<DefaultRabbitMQPersistentConnection> _logger;
+    //private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly int _retryCount;
     IConnection _connection;
     bool _disposed;
 
     object sync_root = new object();
 
-    public DefaultRabbitMQPersistentConnection(IConnectionFactory connectionFactory, ILogger<DefaultRabbitMQPersistentConnection> logger, int retryCount = 5)
+    public DefaultRabbitMQPersistentConnection(ConnectionFactory connectionFactory, ILogger<DefaultRabbitMQPersistentConnection> logger, int retryCount = 5)
     {
         _connectionFactory = connectionFactory ?? throw new ArgumentNullException(nameof(connectionFactory));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _retryCount = retryCount;
+        //_httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
     }
 
     public bool IsConnected
@@ -60,6 +64,12 @@ public class DefaultRabbitMQPersistentConnection
 
             policy.Execute(() =>
             {
+                //var settings = GetSettingsFromUserClaims();
+
+                //_connectionFactory.HostName = settings.ConnectionString;
+                //_connectionFactory.UserName = settings.Username;
+                //_connectionFactory.Password = settings.Password;
+
                 _connection = _connectionFactory
                       .CreateConnection();
             });
@@ -95,7 +105,7 @@ public class DefaultRabbitMQPersistentConnection
             return _connection.CreateModel();
         }
     }
-    
+
     private void OnConnectionBlocked(object sender, ConnectionBlockedEventArgs e)
     {
         if (_disposed) return;
@@ -123,6 +133,19 @@ public class DefaultRabbitMQPersistentConnection
         TryConnect();
     }
 
-    
+    //private EventBusSettings GetSettingsFromUserClaims()
+    //{
+    //    var claims = _httpContextAccessor.HttpContext.User.Claims;
+    //    var tenancyJson = claims.FirstOrDefault(c => c.Type == "TenancyJson")?.Value;
+
+    //    if (string.IsNullOrEmpty(tenancyJson))
+    //    {
+    //        throw new Exception("TenancyJson claim is missing");
+    //    }
+
+    //    var tenancy = JsonConvert.DeserializeObject<TenancySettings>(tenancyJson);
+
+    //    return tenancy.EventBusSettings;
+    //}
 }
 

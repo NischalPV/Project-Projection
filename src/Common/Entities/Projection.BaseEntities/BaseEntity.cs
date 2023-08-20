@@ -60,10 +60,10 @@ public abstract record BaseEntity<T> : IBaseEntity
     public int StatusId { get; set; }
 
     [ForeignKey(name: nameof(LastStatus))]
-    public int LastStatusId { get; set; }
+    public int? LastStatusId { get; set; }
     public string StatusChangedBy { get; set; }
     public DateTime? StatusChangedDate { get; set; }
-    public bool IsActive { get; set; }
+    public bool IsActive { get; set; } = true;
 
 
     public virtual Status Status { get; set; }

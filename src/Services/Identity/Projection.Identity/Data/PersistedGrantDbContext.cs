@@ -1,6 +1,7 @@
 using Duende.IdentityServer.EntityFramework.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Projection.Common.GlobalConstants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,7 @@ public class PersistedGrantDbContext : Duende.IdentityServer.EntityFramework.DbC
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasDefaultSchema(Schema.IDENTITY_SCHEMA);
         base.OnModelCreating(modelBuilder);
     }
 }

@@ -1,3 +1,5 @@
+﻿using Projection.BuildingBlocks.Shared.Constants;
+
 namespace Projection.BuildingBlocks.IntegrationEventLogEF;
 
 public class IntegrationEventLogContext : DbContext
@@ -10,7 +12,7 @@ public class IntegrationEventLogContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.HasDefaultSchema(GlobalConstants.INTEGRATION_SCHEMA);
+        builder.HasDefaultSchema(Schema.INTEGRATION_SCHEMA);
         builder.Entity<IntegrationEventLogEntry>(ConfigureIntegrationEventLogEntry);
     }
 

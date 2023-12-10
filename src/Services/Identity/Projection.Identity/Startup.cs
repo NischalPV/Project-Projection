@@ -8,11 +8,9 @@ using Microsoft.AspNetCore.Builder;
 using Projection.Identity.Models;
 using Projection.Identity.Services;
 using Projection.Identity.Devspaces;
-using StackExchange.Redis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 namespace Projection.Identity;
@@ -46,21 +44,6 @@ public class Startup
             .AddDefaultTokenProviders();
 
         services.Configure<AppSettings>(Configuration);
-
-        if (Configuration.GetValue<string>("IsClusterEnv") == bool.TrueString)
-        {
-            services.AddDataProtection(opts =>
-            {
-                opts.ApplicationDiscriminator = "projection.identity";
-            })
-            .PersistKeysToStackExchangeRedis(ConnectionMultiplexer.Connect(Configuration["DPConnectionString"]), "DataProtection-Keys");
-        }
-
-        services.AddHealthChecks()
-            .AddCheck("self", () => HealthCheckResult.Healthy())
-            .AddNpgSql(connectionString,
-                name: "IdentityDB-check",
-                tags: new string[] { "IdentityDB" });
 
         services.AddTransient<ILoginService<ApplicationUser>, EFLoginService>();
         services.AddTransient<IRedirectService, RedirectService>();
@@ -100,11 +83,6 @@ public class Startup
         services.AddControllersWithViews();
         services.AddRazorPages();
 
-        //var container = new ContainerBuilder();
-        //container.Populate(services);
-
-        //return new AutofacServiceProvider(container.Build());
-
     }
 
 
@@ -128,7 +106,7 @@ public class Startup
 
         app.Use(async (context, next) =>
         {
-            context.Response.Headers.Add("Content-Security-Policy", "script-src 'unsafe-inline'");
+            context.Response.Headers.Append("Content-Security-Policy", "script-src 'unsafe-inline'");
             await next();
         });
 
@@ -156,34 +134,8 @@ public class Startup
             endpoints.MapRazorPages();
             endpoints.MapDefaultControllerRoute();
             endpoints.MapControllers();
-            endpoints.MapHealthChecks("/hc", new HealthCheckOptions
-            {
-                Predicate = _ => true,
-                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-            });
-            endpoints.MapHealthChecks("/liveness", new HealthCheckOptions
-            {
-                Predicate = r => r.Name.Contains("self")
-            });
 
         });
     }
-    // ConfigureContainer is where you can register things directly
-    // with Autofac. This runs after ConfigureServices so the things
-    // here will override registrations made in ConfigureServices.
-    // Don't build the container; that gets done for you by the factory.
-    // public void ConfigureContainer(ContainerBuilder builder)
-    // {
-    //     // Register your own things directly with Autofac here. Don't
-    //     // call builder.Populate(), that happens in AutofacServiceProviderFactory
-    //     // for you.
-    //     //builder.RegisterModule(new MyApplicationModule());
-    // }
-
-    // private void RegisterAppInsights(IServiceCollection services)
-    // {
-    //     services.AddApplicationInsightsTelemetry(Configuration);
-    //     services.AddApplicationInsightsKubernetesEnricher();
-    // }
 }
 

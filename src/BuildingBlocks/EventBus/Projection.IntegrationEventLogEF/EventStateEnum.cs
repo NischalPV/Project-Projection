@@ -1,4 +1,4 @@
-namespace Projection.BuildingBlocks.IntegrationEventLogEF;
+﻿namespace Projection.BuildingBlocks.IntegrationEventLogEF;
 
 public enum EventStateEnum
 {

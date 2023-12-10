@@ -1,6 +1,7 @@
 using Duende.IdentityServer.EntityFramework.Extensions;
 using Duende.IdentityServer.EntityFramework.Options;
 using Microsoft.EntityFrameworkCore;
+using Projection.Common.GlobalConstants;
 
 namespace Projection.Identity.Data;
 
@@ -18,7 +19,7 @@ public class ConfigurationDbContext : Duende.IdentityServer.EntityFramework.DbCo
         // modelBuilder.ConfigureClientContext(_storeOptions);
         // modelBuilder.ConfigureResourcesContext(_storeOptions);
 
-        //modelBuilder.HasDefaultSchema(GlobalConstants.DEFAULT_SCHEMA);
+        modelBuilder.HasDefaultSchema(Schema.IDENTITY_SCHEMA);
 
         base.OnModelCreating(modelBuilder);
 

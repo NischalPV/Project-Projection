@@ -1,12 +1,11 @@
 
-// using Autofac.Extensions.DependencyInjection;
-using Azure.Core;
-using Azure.Identity;
 using Projection.Identity;
 using Serilog;
 
 string Namespace = typeof(Startup).Namespace;
 string AppName = Namespace.Substring(Namespace.LastIndexOf('.', Namespace.LastIndexOf('.') - 1) + 1);
+
+var builder = WebApplication.CreateBuilder(args);
 
 var configuration = GetConfiguration();
 
@@ -27,15 +26,6 @@ IConfiguration GetConfiguration()
 
     var config = builder.Build();
 
-    if (config.GetValue<bool>("UseVault", false))
-    {
-        TokenCredential credential = new ClientSecretCredential(
-            config["Vault:TenantId"],
-            config["Vault:ClientId"],
-            config["Vault:ClientSecret"]);
-        builder.AddAzureKeyVault(new Uri($"https://{config["Vault:Name"]}.vault.azure.net/"), credential);
-    }
-
     return builder.Build();
 }
 
@@ -55,8 +45,8 @@ Serilog.ILogger CreateSerilogLogger(IConfiguration configuration)
 }
 
 IHost BuildWebHost(IConfiguration configuration, string[] args) =>
+
     Host.CreateDefaultBuilder(args)
-    // .UseServiceProviderFactory(new AutofacServiceProviderFactory())
     .ConfigureWebHostDefaults(webBuilder =>
     {
         webBuilder.CaptureStartupErrors(false);

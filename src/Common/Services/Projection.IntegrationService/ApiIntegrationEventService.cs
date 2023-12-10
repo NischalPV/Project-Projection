@@ -44,7 +44,7 @@ public class ApiIntegrationEventService<TContext> : IApiIntegrationEventService<
             try
             {
                 await _eventLogService.MarkEventAsInProgressAsync(logEvt.EventId);
-                _eventBus.Publish(logEvt.IntegrationEvent);
+                await _eventBus.PublishAsync(logEvt.IntegrationEvent);
                 await _eventLogService.MarkEventAsPublishedAsync(logEvt.EventId);
             }
             catch (Exception ex)

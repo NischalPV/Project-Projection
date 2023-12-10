@@ -1,4 +1,4 @@
-namespace Projection.BuildingBlocks.EventBus.Extensions;
+﻿namespace Projection.BuildingBlocks.EventBus.Extensions;
 
 public static class GenericTypeExtensions
 {

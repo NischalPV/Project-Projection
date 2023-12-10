@@ -18,12 +18,12 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("accounting")
-                .HasAnnotation("ProductVersion", "7.0.9")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Projection.Accounting.Core.Account", b =>
+            modelBuilder.Entity("Projection.Accounting.Core.Entities.Account", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -85,7 +85,7 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
                     b.ToTable("Accounts", "accounting");
                 });
 
-            modelBuilder.Entity("Projection.Accounting.Core.AccountTransaction", b =>
+            modelBuilder.Entity("Projection.Accounting.Core.Entities.AccountTransaction", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -151,7 +151,7 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
                     b.ToTable("AccountTransactions", "accounting");
                 });
 
-            modelBuilder.Entity("Projection.Accounting.Core.TransactionType", b =>
+            modelBuilder.Entity("Projection.Accounting.Core.Entities.TransactionType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -210,7 +210,7 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
                         new
                         {
                             Id = 1,
-                            CreatedDate = new DateTime(2023, 8, 20, 7, 21, 38, 110, DateTimeKind.Utc).AddTicks(5240),
+                            CreatedDate = new DateTime(2023, 12, 9, 20, 35, 38, 598, DateTimeKind.Utc).AddTicks(9240),
                             Description = "Credit transaction",
                             IsActive = true,
                             Multiplier = 1,
@@ -220,7 +220,7 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
                         new
                         {
                             Id = 2,
-                            CreatedDate = new DateTime(2023, 8, 20, 7, 21, 38, 110, DateTimeKind.Utc).AddTicks(5250),
+                            CreatedDate = new DateTime(2023, 12, 9, 20, 35, 38, 598, DateTimeKind.Utc).AddTicks(9245),
                             Description = "Debit transaction",
                             IsActive = true,
                             Multiplier = -1,
@@ -364,7 +364,7 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
                         });
                 });
 
-            modelBuilder.Entity("Projection.Accounting.Core.Account", b =>
+            modelBuilder.Entity("Projection.Accounting.Core.Entities.Account", b =>
                 {
                     b.HasOne("Projection.Common.BaseEntities.Status", "LastStatus")
                         .WithMany()
@@ -381,9 +381,9 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
                     b.Navigation("Status");
                 });
 
-            modelBuilder.Entity("Projection.Accounting.Core.AccountTransaction", b =>
+            modelBuilder.Entity("Projection.Accounting.Core.Entities.AccountTransaction", b =>
                 {
-                    b.HasOne("Projection.Accounting.Core.Account", "Account")
+                    b.HasOne("Projection.Accounting.Core.Entities.Account", "Account")
                         .WithMany()
                         .HasForeignKey("AccountId");
 
@@ -397,7 +397,7 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Projection.Accounting.Core.TransactionType", "TransactionType")
+                    b.HasOne("Projection.Accounting.Core.Entities.TransactionType", "TransactionType")
                         .WithMany()
                         .HasForeignKey("TransactionTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -412,7 +412,7 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
                     b.Navigation("TransactionType");
                 });
 
-            modelBuilder.Entity("Projection.Accounting.Core.TransactionType", b =>
+            modelBuilder.Entity("Projection.Accounting.Core.Entities.TransactionType", b =>
                 {
                     b.HasOne("Projection.Common.BaseEntities.Status", "LastStatus")
                         .WithMany()

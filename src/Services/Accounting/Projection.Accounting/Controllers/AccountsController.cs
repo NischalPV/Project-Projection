@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Projection.Accounting.Core;
-using Projection.Accounting.Data;
+using Projection.Accounting.Core.Entities;
 using Projection.Accounting.Infrastructure.Data;
 
 namespace Projection.Accounting;

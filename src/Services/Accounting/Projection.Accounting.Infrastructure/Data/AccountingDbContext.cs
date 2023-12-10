@@ -1,8 +1,8 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Projection.Accounting.Core.Entities;
 using Projection.Common.DataService.Contexts;
+using Projection.Common.GlobalConstants;
 
 namespace Projection.Accounting.Infrastructure.Data;
 
@@ -10,18 +10,9 @@ public class AccountingDbContext : BaseDbContext
 {
     #region Properties
     internal readonly IMediator _mediator;
-    private readonly IHttpContextAccessor _httpContextAccessor;
     #endregion
 
     #region ctors
-    public AccountingDbContext(DbContextOptions<AccountingDbContext> options, IHttpContextAccessor httpContextAccessor, IMediator mediator) : base(options)
-    {
-        _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
-        _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-
-        System.Diagnostics.Debug.WriteLine($"{this.GetType().Name}::ctor ->" + this.GetHashCode());
-    }
-
     public AccountingDbContext(DbContextOptions<AccountingDbContext> options, IMediator mediator) : base(options)
     {
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
@@ -43,7 +34,7 @@ public class AccountingDbContext : BaseDbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasDefaultSchema(Common.GlobalConstants.Schema.ACCOUNTING_SCHEMA);
+        modelBuilder.HasDefaultSchema(Schema.ACCOUNTING_SCHEMA);
         base.OnModelCreating(modelBuilder);
         Masterdata.SeedUsingMigration(modelBuilder);
     }

@@ -23,4 +23,4 @@ jobs:
     - name: Build
       run: dotnet build Projection.slnf
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test Projection.slnf --verbosity normal

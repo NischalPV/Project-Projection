@@ -1,16 +1,26 @@
-namespace Projection.Common.Behaviours;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Projection.Accounting.Commands;
+using Projection.Accounting.Infrastructure.Data;
+using Projection.BuildingBlocks.EventBus.Extensions;
+using Projection.BuildingBlocks.IntegrationEventLogEF;
+using Projection.BuildingBlocks.Shared.Commands;
+using Projection.Common.DataService.Contexts;
+using Projection.Common.IntegrationService;
 
-public class TransactionBehavior<TRequest, TResponse, TContext> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse> where TContext : BaseDbContext
+namespace Projection.Accounting.Behaviours;
+
+public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : BaseCommand<TResponse>
 {
-    private readonly ILogger<TransactionBehavior<TRequest, TResponse, TContext>> _logger;
-    private readonly TContext _dbContext;
-    private readonly IApiIntegrationEventService<BaseDbContext> _integrationEventService;
+    private readonly ILogger<TransactionBehavior<TRequest, TResponse>> _logger;
+    private readonly AccountingDbContext _dbContext;
+    private readonly IApiIntegrationEventService<IntegrationEventLogContext> _integrationEventService;
 
-    public TransactionBehavior(TContext dbContext,
-        IApiIntegrationEventService<BaseDbContext> integrationEventService,
-        ILogger<TransactionBehavior<TRequest, TResponse, TContext>> logger)
+    public TransactionBehavior(AccountingDbContext dbContext,
+        IApiIntegrationEventService<IntegrationEventLogContext> integrationEventService,
+        ILogger<TransactionBehavior<TRequest, TResponse>> logger)
     {
-        _dbContext = dbContext ?? throw new ArgumentException(nameof(TContext));
+        _dbContext = dbContext ?? throw new ArgumentException(nameof(dbContext));
         _integrationEventService = integrationEventService ?? throw new ArgumentException(nameof(integrationEventService));
         _logger = logger ?? throw new ArgumentException(nameof(ILogger));
     }
@@ -51,7 +61,7 @@ public class TransactionBehavior<TRequest, TResponse, TContext> : IPipelineBehav
                     transactionId = transaction.TransactionId;
                 }
 
-                await _integrationEventService.PublishEventsThroughEventBusAsync(transactionId, typeof(TContext).Name);
+                await _integrationEventService.PublishEventsThroughEventBusAsync(transactionId, typeof(AccountingDbContext).Name);
             });
 
             return response;

@@ -76,7 +76,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{0AB03C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Projection.Shared", "src\BuildingBlocks\Shared\Projection.Shared\Projection.Shared.csproj", "{0DF53AB2-098D-4FB4-B5F5-115F7AD7864B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Projection.AppHost", "Projection.AppHost\Projection.AppHost.csproj", "{CB8B60F8-8E21-40BC-B8BE-9BC642E32738}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Projection.AppHost", "Projection.AppHost\Projection.AppHost.csproj", "{CB8B60F8-8E21-40BC-B8BE-9BC642E32738}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Projection.ServiceDefaults", "Projection.ServiceDefaults\Projection.ServiceDefaults.csproj", "{B6F5CFEB-72D3-429B-893E-4EC54A3CBB5D}"
 EndProject

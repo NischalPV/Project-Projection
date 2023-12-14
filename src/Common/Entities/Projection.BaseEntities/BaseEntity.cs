@@ -29,6 +29,9 @@ public record IBaseEntity
         _domainEvents?.Clear();
     }
 
+    public bool IsActive { get; set; } = true;
+
+
 }
 
 public abstract record BaseEntity<T> : IBaseEntity
@@ -57,13 +60,12 @@ public abstract record BaseEntity<T> : IBaseEntity
     public string ModifiedBy { get; set; }
 
     [ForeignKey(name: nameof(Status))]
-    public int StatusId { get; set; }
+    public int StatusId { get; set; } = (int)StatusEnum.Draft;
 
     [ForeignKey(name: nameof(LastStatus))]
     public int? LastStatusId { get; set; }
     public string StatusChangedBy { get; set; }
     public DateTime? StatusChangedDate { get; set; }
-    public bool IsActive { get; set; } = true;
 
 
     public virtual Status Status { get; set; }

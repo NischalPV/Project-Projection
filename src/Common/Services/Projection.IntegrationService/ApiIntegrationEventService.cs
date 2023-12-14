@@ -11,15 +11,13 @@ namespace Projection.Common.IntegrationService;
 
 public class ApiIntegrationEventService<TContext> : IApiIntegrationEventService<TContext> where TContext : BaseDbContext
 {
-    private readonly Func<DbConnection, IIntegrationEventLogService> _integrationEventLogServiceFactory;
     private readonly IEventBus _eventBus;
     private readonly TContext _dbContext;
     private readonly IIntegrationEventLogService _eventLogService;
     private readonly ILogger<ApiIntegrationEventService<TContext>> _logger;
 
-    public ApiIntegrationEventService(Func<DbConnection, IIntegrationEventLogService> integrationEventLogServiceFactory, IEventBus eventBus, TContext dbContext, IIntegrationEventLogService eventLogService, ILogger<ApiIntegrationEventService<TContext>> logger)
+    public ApiIntegrationEventService(IEventBus eventBus, TContext dbContext, IIntegrationEventLogService eventLogService, ILogger<ApiIntegrationEventService<TContext>> logger)
     {
-        _integrationEventLogServiceFactory = integrationEventLogServiceFactory ?? throw new ArgumentNullException(nameof(integrationEventLogServiceFactory));
         _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
         _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         _eventLogService = eventLogService ?? throw new ArgumentNullException(nameof(eventLogService));

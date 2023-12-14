@@ -1,7 +1,9 @@
-﻿namespace Projection.BuildingBlocks.IntegrationEventLogEF.Services;
+﻿using Projection.Common.DataService.Contexts;
+
+namespace Projection.BuildingBlocks.IntegrationEventLogEF.Services;
 
 public class IntegrationEventLogService<TContext> : IIntegrationEventLogService, IDisposable
-    where TContext : DbContext
+    where TContext : BaseDbContext
 {
     private volatile bool _disposedValue;
     private readonly TContext _context;
@@ -19,7 +21,7 @@ public class IntegrationEventLogService<TContext> : IIntegrationEventLogService,
     public async Task<IEnumerable<IntegrationEventLogEntry>> RetrieveEventLogsPendingToPublishAsync(Guid transactionId)
     {
         var result = await _context.Set<IntegrationEventLogEntry>()
-            .Where(e => e.TransactionId == transactionId && e.State == EventStateEnum.NotPublished)
+            .Where(e => e.TransactionId.ToString() == transactionId.ToString() && e.State == EventStateEnum.NotPublished)
             .ToListAsync();
 
         if (result.Count != 0)
@@ -31,16 +33,18 @@ public class IntegrationEventLogService<TContext> : IIntegrationEventLogService,
         return [];
     }
 
-    public Task SaveEventAsync(IntegrationEvent @event, IDbContextTransaction transaction)
+    public async Task SaveEventAsync(IntegrationEvent @event, IDbContextTransaction transaction)
     {
-        if (transaction == null) throw new ArgumentNullException(nameof(transaction));
+        if (transaction == null) transaction = _context.BeginTransactionAsync().Result;
 
         var eventLogEntry = new IntegrationEventLogEntry(@event, transaction.TransactionId);
 
         _context.Database.UseTransaction(transaction.GetDbTransaction());
         _context.Set<IntegrationEventLogEntry>().Add(eventLogEntry);
 
-        return _context.SaveChangesAsync();
+        await _context.SaveChangesAsync();
+
+        await _context.CommitTransactionAsync(transaction);
     }
 
     public Task MarkEventAsPublishedAsync(Guid eventId)

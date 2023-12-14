@@ -6,6 +6,12 @@ using Projection.Common.Behaviours;
 using Projection.Common.IntegrationService;
 using Projection.ServiceDefaults.Services;
 using Microsoft.EntityFrameworkCore;
+using Projection.Accounting.Behaviours;
+using FluentValidation;
+using Projection.Accounting.Features.Accounting.Commands;
+using Projection.Accounting.Core.Entities;
+using Projection.Accounting.Commands;
+using Projection.Accounting.Validations;
 
 internal static class Extensions
 {
@@ -66,7 +72,7 @@ internal static class Extensions
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
         // Add the integration services that consume the DbContext
-        builder.Services.AddTransient<IIntegrationEventLogService, IntegrationEventLogService<AccountingDbContext>>();
+        builder.Services.AddTransient<IIntegrationEventLogService, IntegrationEventLogService<IntegrationEventLogContext>>();
 
         builder.Services.AddTransient(typeof(IApiIntegrationEventService<>), typeof(ApiIntegrationEventService<>));
 
@@ -85,7 +91,9 @@ internal static class Extensions
 
             cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
             cfg.AddOpenBehavior(typeof(ValidatorBehavior<,>));
-            //cfg.AddOpenBehavior(typeof(TransactionBehavior<,,>));
+            cfg.AddOpenBehavior(typeof(TransactionBehavior<,>));
         });
+
+        //services.AddSingleton<IValidator<IdentifiedCommand<AccountCreateCommand, Account>>, IdentifiedCommandValidator<AccountCreateCommand, Account>>();
     }
 }

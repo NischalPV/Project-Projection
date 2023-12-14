@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\Shared\Projection.Shared\Projection.Shared.csproj" />
     <ProjectReference Include="..\Projection.Accounting.Core\Projection.Accounting.Core.csproj" />
     <ProjectReference Include="..\..\..\Common\Data\Projection.DataService\Projection.DataService.csproj" />
     <ProjectReference Include="..\..\..\Common\Constants\Projection.GlobalConstants\Projection.GlobalConstants.csproj" />

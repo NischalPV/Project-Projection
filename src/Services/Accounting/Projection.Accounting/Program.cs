@@ -1,4 +1,5 @@
 using Asp.Versioning;
+using Asp.Versioning.Conventions;
 using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Newtonsoft.Json;
 using Projection.Accounting;
+using Projection.Accounting.Features.Accounting.Apis;
 using Projection.Accounting.Infrastructure.Data;
 using Projection.BuildingBlocks.EventBus;
 using Projection.BuildingBlocks.EventBus.Abstractions;
@@ -30,13 +32,16 @@ builder.AddDefaultOpenApi();
 
 builder.AddApplicationServices();
 
-builder.Services.AddApiVersioning(config =>
-{
-    config.DefaultApiVersion = new ApiVersion(1, 0);
-    config.AssumeDefaultVersionWhenUnspecified = true;
-    config.ReportApiVersions = true;
-    config.ApiVersionReader = new UrlSegmentApiVersionReader();
-});
+builder.Services.AddApiVersioning(
+    config =>
+    {
+        config.DefaultApiVersion = new ApiVersion(1, 0);
+        config.AssumeDefaultVersionWhenUnspecified = true;
+        config.ReportApiVersions = true;
+        config.ApiVersionReader = new UrlSegmentApiVersionReader();
+    });
+
+
 
 builder.Services.AddProblemDetails();
 
@@ -56,6 +61,12 @@ app.UseAuthorization();
 
 app.UseCors("CorsPolicy");
 
+var versionSet = app.NewApiVersionSet()
+                            .HasApiVersion(1, 0)
+                            .HasApiVersion(2, 0)
+                            .ReportApiVersions()
+                            .Build();
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
@@ -64,6 +75,13 @@ app.MapDefaultControllerRoute();
 app.MapControllers();
 
 app.MapDefaultEndpoints();
+
+app.MapGroup("api/accounts")
+    .MapAccountsApi()
+    .WithApiVersionSet(versionSet)
+    .MapToApiVersion(1, 0)
+    .WithTags("Accounting")
+    .RequireAuthorization();
 
 
 

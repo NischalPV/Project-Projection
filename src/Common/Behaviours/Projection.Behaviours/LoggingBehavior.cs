@@ -1,6 +1,8 @@
-﻿namespace Projection.Common.Behaviours;
+﻿using Projection.BuildingBlocks.Shared.Commands;
 
-public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
+namespace Projection.Common.Behaviours;
+
+public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : BaseCommand<TResponse>
 {
     private readonly ILogger<LoggingBehavior<TRequest, TResponse>> _logger;
 

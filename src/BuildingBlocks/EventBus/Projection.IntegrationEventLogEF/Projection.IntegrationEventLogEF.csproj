@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\Data\Projection.DataService\Projection.DataService.csproj" />
     <ProjectReference Include="..\..\Shared\Projection.Shared\Projection.Shared.csproj" />
     <ProjectReference Include="..\Projection.EventBus\Projection.EventBus.csproj" />
   </ItemGroup>

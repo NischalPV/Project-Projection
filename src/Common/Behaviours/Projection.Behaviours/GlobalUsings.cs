@@ -8,4 +8,3 @@ global using Projection.Common.ApiExceptions;
 global using MediatR;
 global using Microsoft.Extensions.Logging;
 global using Microsoft.EntityFrameworkCore;
-global using Serilog.Context;

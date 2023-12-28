@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
 namespace Projection.Common.DataService.Contexts;
@@ -10,14 +9,12 @@ public class BaseDbContext : DbContext, IUnitOfWork
     internal readonly IMediator _mediator;
     private IDbContextTransaction _currentTransaction;
     public IDbContextTransaction GetCurrentTransaction() => _currentTransaction;
-    private readonly IHttpContextAccessor _httpContextAccessor;
     public bool HasActiveTransaction => _currentTransaction != null;
     #endregion
 
     #region ctors
-    public BaseDbContext(DbContextOptions<BaseDbContext> options, IHttpContextAccessor httpContextAccessor, IMediator mediator) : base(options)
+    public BaseDbContext(DbContextOptions<BaseDbContext> options, IMediator mediator) : base(options)
     {
-        _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
 
         System.Diagnostics.Debug.WriteLine($"{this.GetType().Name}::ctor ->" + this.GetHashCode());
@@ -33,7 +30,7 @@ public class BaseDbContext : DbContext, IUnitOfWork
 
     #endregion
 
-    public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
+    public virtual async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
     {
         // Dispatch Domain Events collection. 
         // Choices:
@@ -98,20 +95,5 @@ public class BaseDbContext : DbContext, IUnitOfWork
                 _currentTransaction = null;
             }
         }
-    }
-
-    public string GetConnectionString()
-    {
-        var claims = _httpContextAccessor.HttpContext.User.Claims;
-        var tenancyJson = claims.FirstOrDefault(c => c.Type == "TenancyJson")?.Value;
-
-        if (string.IsNullOrEmpty(tenancyJson))
-        {
-            throw new Exception("TenancyJson claim is missing");
-        }
-
-        var tenancy = JsonConvert.DeserializeObject<TenancySettings>(tenancyJson);
-        return tenancy.DefaultConnection;
-
     }
 }

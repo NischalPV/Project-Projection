@@ -18,7 +18,7 @@ namespace Projection.Accounting.Data.Migrations.IntegrationEventLog
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("integration")
-                .HasAnnotation("ProductVersion", "7.0.9")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -46,8 +46,8 @@ namespace Projection.Accounting.Data.Migrations.IntegrationEventLog
                     b.Property<int>("TimesSent")
                         .HasColumnType("integer");
 
-                    b.Property<string>("TransactionId")
-                        .HasColumnType("text");
+                    b.Property<Guid>("TransactionId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("EventId");
 

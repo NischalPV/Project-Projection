@@ -1,4 +1,4 @@
-namespace Projection.BuildingBlocks.IntegrationEventLogEF.Services;
+﻿namespace Projection.BuildingBlocks.IntegrationEventLogEF.Services;
 
 public interface IIntegrationEventLogService
 {

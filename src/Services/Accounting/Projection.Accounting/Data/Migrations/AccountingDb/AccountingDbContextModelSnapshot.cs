@@ -18,12 +18,12 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("accounting")
-                .HasAnnotation("ProductVersion", "7.0.9")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Projection.Accounting.Core.Account", b =>
+            modelBuilder.Entity("Projection.Accounting.Core.Entities.Account", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -39,6 +39,9 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CurrencyId")
+                        .HasColumnType("text");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
@@ -78,6 +81,8 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CurrencyId");
+
                     b.HasIndex("LastStatusId");
 
                     b.HasIndex("StatusId");
@@ -85,7 +90,7 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
                     b.ToTable("Accounts", "accounting");
                 });
 
-            modelBuilder.Entity("Projection.Accounting.Core.AccountTransaction", b =>
+            modelBuilder.Entity("Projection.Accounting.Core.Entities.AccountTransaction", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -151,7 +156,124 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
                     b.ToTable("AccountTransactions", "accounting");
                 });
 
-            modelBuilder.Entity("Projection.Accounting.Core.TransactionType", b =>
+            modelBuilder.Entity("Projection.Accounting.Core.Entities.Country", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Code")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<int?>("LastStatusId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("StatusChangedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("StatusChangedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("StatusId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UniqueIdentifier")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LastStatusId");
+
+                    b.HasIndex("StatusId");
+
+                    b.ToTable("Countries", "public");
+                });
+
+            modelBuilder.Entity("Projection.Accounting.Core.Entities.Currency", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AlphabeticCode")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CountryId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<int?>("LastStatusId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("NumericCode")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("StatusChangedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("StatusChangedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("StatusId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Symbol")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UniqueIdentifier")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CountryId");
+
+                    b.HasIndex("LastStatusId");
+
+                    b.HasIndex("StatusId");
+
+                    b.ToTable("Currencies", "public");
+                });
+
+            modelBuilder.Entity("Projection.Accounting.Core.Entities.TransactionType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -210,7 +332,7 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
                         new
                         {
                             Id = 1,
-                            CreatedDate = new DateTime(2023, 8, 20, 7, 21, 38, 110, DateTimeKind.Utc).AddTicks(5240),
+                            CreatedDate = new DateTime(2023, 12, 28, 12, 13, 33, 690, DateTimeKind.Utc).AddTicks(3441),
                             Description = "Credit transaction",
                             IsActive = true,
                             Multiplier = 1,
@@ -220,13 +342,31 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
                         new
                         {
                             Id = 2,
-                            CreatedDate = new DateTime(2023, 8, 20, 7, 21, 38, 110, DateTimeKind.Utc).AddTicks(5250),
+                            CreatedDate = new DateTime(2023, 12, 28, 12, 13, 33, 690, DateTimeKind.Utc).AddTicks(3448),
                             Description = "Debit transaction",
                             IsActive = true,
                             Multiplier = -1,
                             Name = "Debit",
                             StatusId = 13
                         });
+                });
+
+            modelBuilder.Entity("Projection.BuildingBlocks.Shared.Idempotency.ClientRequest", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Requests", "accounting");
                 });
 
             modelBuilder.Entity("Projection.Common.BaseEntities.Status", b =>
@@ -364,8 +504,12 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
                         });
                 });
 
-            modelBuilder.Entity("Projection.Accounting.Core.Account", b =>
+            modelBuilder.Entity("Projection.Accounting.Core.Entities.Account", b =>
                 {
+                    b.HasOne("Projection.Accounting.Core.Entities.Currency", "Currency")
+                        .WithMany()
+                        .HasForeignKey("CurrencyId");
+
                     b.HasOne("Projection.Common.BaseEntities.Status", "LastStatus")
                         .WithMany()
                         .HasForeignKey("LastStatusId");
@@ -375,17 +519,53 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
                         .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.OwnsMany("Projection.Accounting.Core.Entities.PointOfContact", "Contacts", b1 =>
+                        {
+                            b1.Property<string>("AccountId")
+                                .HasColumnType("text");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Email")
+                                .HasColumnType("text");
+
+                            b1.Property<string>("Name")
+                                .HasColumnType("text");
+
+                            b1.Property<string>("Notes")
+                                .HasColumnType("text");
+
+                            b1.Property<string>("Phone")
+                                .HasColumnType("text");
+
+                            b1.HasKey("AccountId", "Id");
+
+                            b1.ToTable("Accounts", "accounting");
+
+                            b1.ToJson("Contacts");
+
+                            b1.WithOwner()
+                                .HasForeignKey("AccountId");
+                        });
+
+                    b.Navigation("Contacts");
+
+                    b.Navigation("Currency");
 
                     b.Navigation("LastStatus");
 
                     b.Navigation("Status");
                 });
 
-            modelBuilder.Entity("Projection.Accounting.Core.AccountTransaction", b =>
+            modelBuilder.Entity("Projection.Accounting.Core.Entities.AccountTransaction", b =>
                 {
-                    b.HasOne("Projection.Accounting.Core.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountId");
+                    b.HasOne("Projection.Accounting.Core.Entities.Account", "Account")
+                        .WithMany("Transactions")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Projection.Common.BaseEntities.Status", "LastStatus")
                         .WithMany()
@@ -397,7 +577,7 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Projection.Accounting.Core.TransactionType", "TransactionType")
+                    b.HasOne("Projection.Accounting.Core.Entities.TransactionType", "TransactionType")
                         .WithMany()
                         .HasForeignKey("TransactionTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -412,7 +592,7 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
                     b.Navigation("TransactionType");
                 });
 
-            modelBuilder.Entity("Projection.Accounting.Core.TransactionType", b =>
+            modelBuilder.Entity("Projection.Accounting.Core.Entities.Country", b =>
                 {
                     b.HasOne("Projection.Common.BaseEntities.Status", "LastStatus")
                         .WithMany()
@@ -427,6 +607,51 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
                     b.Navigation("LastStatus");
 
                     b.Navigation("Status");
+                });
+
+            modelBuilder.Entity("Projection.Accounting.Core.Entities.Currency", b =>
+                {
+                    b.HasOne("Projection.Accounting.Core.Entities.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId");
+
+                    b.HasOne("Projection.Common.BaseEntities.Status", "LastStatus")
+                        .WithMany()
+                        .HasForeignKey("LastStatusId");
+
+                    b.HasOne("Projection.Common.BaseEntities.Status", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Country");
+
+                    b.Navigation("LastStatus");
+
+                    b.Navigation("Status");
+                });
+
+            modelBuilder.Entity("Projection.Accounting.Core.Entities.TransactionType", b =>
+                {
+                    b.HasOne("Projection.Common.BaseEntities.Status", "LastStatus")
+                        .WithMany()
+                        .HasForeignKey("LastStatusId");
+
+                    b.HasOne("Projection.Common.BaseEntities.Status", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LastStatus");
+
+                    b.Navigation("Status");
+                });
+
+            modelBuilder.Entity("Projection.Accounting.Core.Entities.Account", b =>
+                {
+                    b.Navigation("Transactions");
                 });
 #pragma warning restore 612, 618
         }

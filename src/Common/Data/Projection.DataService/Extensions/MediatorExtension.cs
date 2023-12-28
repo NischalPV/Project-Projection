@@ -16,12 +16,15 @@ public static class MediatorExtension
         domainEntities.ToList()
             .ForEach(entity => entity.Entity.ClearDomainEvents());
 
-        var tasks = domainEvents
-            .Select(async (domainEvent) =>
-            {
-                await mediator.Publish(domainEvent);
-            });
+        foreach (var domainEvent in domainEvents)
+            await mediator.Publish(domainEvent);
 
-        await Task.WhenAll(tasks);
+        //var tasks = domainEvents
+        //    .Select(async (domainEvent) =>
+        //    {
+        //        await mediator.Publish(domainEvent);
+        //    });
+
+        //await Task.WhenAll(tasks);
     }
 }

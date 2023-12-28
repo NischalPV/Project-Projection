@@ -12,6 +12,7 @@ using Projection.Accounting.Features.Accounting.Commands;
 using Projection.Accounting.Core.Entities;
 using Projection.Accounting.Commands;
 using Projection.Accounting.Validations;
+using Projection.Accounting.Features.Accounting.Commands.Validations;
 
 internal static class Extensions
 {
@@ -94,6 +95,9 @@ internal static class Extensions
             cfg.AddOpenBehavior(typeof(TransactionBehavior<,>));
         });
 
+        services.AddSingleton<IValidator<AccountCreateCommand>, AccountCreateCommandValidator>();
+        services.AddSingleton<IValidator<AccountUpdateCommand>, AccountUpdateCommandValidator>();
+        
         //services.AddSingleton<IValidator<IdentifiedCommand<AccountCreateCommand, Account>>, IdentifiedCommandValidator<AccountCreateCommand, Account>>();
     }
 }

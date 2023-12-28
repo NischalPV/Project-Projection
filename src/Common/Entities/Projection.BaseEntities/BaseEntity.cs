@@ -59,6 +59,7 @@ public abstract record BaseEntity<T> : IBaseEntity
     public string CreatedBy { get; set; }
     public string ModifiedBy { get; set; }
 
+
     [ForeignKey(name: nameof(Status))]
     public int StatusId { get; set; } = (int)StatusEnum.Draft;
 

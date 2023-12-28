@@ -86,7 +86,7 @@ public class BaseEntityEfRepository<TEntity, TKey, TContext> : IBaseEntityAsyncR
 
     public async Task<List<TEntity>> ListAllAsync(CancellationToken cancellationToken = default)
     {
-        return await _ctx.Set<TEntity>().Where(e => e.IsActive).ToListAsync();
+        return await _ctx.Set<TEntity>().ToListAsync();
     }
 
     public async Task<List<TEntity>> ListAllAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)

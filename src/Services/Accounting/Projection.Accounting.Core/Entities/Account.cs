@@ -14,6 +14,10 @@ public record Account : BaseEntity<string>
     [ForeignKey(nameof(Currency))]
     public string CurrencyId { get; set; }
 
+    public IList<AccountTransaction> Transactions { get; set; }
+
+    public IList<PointOfContact> Contacts { get; set; }
+
     public virtual Currency Currency { get; set; }
 
     public Account()

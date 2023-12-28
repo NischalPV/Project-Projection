@@ -332,7 +332,7 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
                         new
                         {
                             Id = 1,
-                            CreatedDate = new DateTime(2023, 12, 13, 11, 46, 2, 608, DateTimeKind.Utc).AddTicks(4956),
+                            CreatedDate = new DateTime(2023, 12, 28, 12, 13, 33, 690, DateTimeKind.Utc).AddTicks(3441),
                             Description = "Credit transaction",
                             IsActive = true,
                             Multiplier = 1,
@@ -342,7 +342,7 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
                         new
                         {
                             Id = 2,
-                            CreatedDate = new DateTime(2023, 12, 13, 11, 46, 2, 608, DateTimeKind.Utc).AddTicks(4964),
+                            CreatedDate = new DateTime(2023, 12, 28, 12, 13, 33, 690, DateTimeKind.Utc).AddTicks(3448),
                             Description = "Debit transaction",
                             IsActive = true,
                             Multiplier = -1,
@@ -520,6 +520,39 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.OwnsMany("Projection.Accounting.Core.Entities.PointOfContact", "Contacts", b1 =>
+                        {
+                            b1.Property<string>("AccountId")
+                                .HasColumnType("text");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Email")
+                                .HasColumnType("text");
+
+                            b1.Property<string>("Name")
+                                .HasColumnType("text");
+
+                            b1.Property<string>("Notes")
+                                .HasColumnType("text");
+
+                            b1.Property<string>("Phone")
+                                .HasColumnType("text");
+
+                            b1.HasKey("AccountId", "Id");
+
+                            b1.ToTable("Accounts", "accounting");
+
+                            b1.ToJson("Contacts");
+
+                            b1.WithOwner()
+                                .HasForeignKey("AccountId");
+                        });
+
+                    b.Navigation("Contacts");
+
                     b.Navigation("Currency");
 
                     b.Navigation("LastStatus");
@@ -530,8 +563,9 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
             modelBuilder.Entity("Projection.Accounting.Core.Entities.AccountTransaction", b =>
                 {
                     b.HasOne("Projection.Accounting.Core.Entities.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountId");
+                        .WithMany("Transactions")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Projection.Common.BaseEntities.Status", "LastStatus")
                         .WithMany()
@@ -613,6 +647,11 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
                     b.Navigation("LastStatus");
 
                     b.Navigation("Status");
+                });
+
+            modelBuilder.Entity("Projection.Accounting.Core.Entities.Account", b =>
+                {
+                    b.Navigation("Transactions");
                 });
 #pragma warning restore 612, 618
         }

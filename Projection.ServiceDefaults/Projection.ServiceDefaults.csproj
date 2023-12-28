@@ -26,4 +26,8 @@
     <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\src\Common\Exceptions\Projection.ApiExceptions\Projection.ApiExceptions.csproj" />
+  </ItemGroup>
+
 </Project>

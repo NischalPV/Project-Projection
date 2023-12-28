@@ -52,9 +52,15 @@ public class Startup
         {
             x.IssuerUri = "null";
             x.Authentication.CookieLifetime = TimeSpan.FromHours(2);
+
+            x.Events.RaiseErrorEvents = true;
+            x.Events.RaiseInformationEvents = true;
+            x.Events.RaiseFailureEvents = true;
+            x.Events.RaiseSuccessEvents = true;
         })
         .AddDevspacesIfNeeded(Configuration.GetValue("EnableDevspaces", false))
-        .AddSigningCredential(Certificate.Get(Configuration.GetValue<string>("SigningCertificate")))
+        .AddDeveloperSigningCredential()
+        //.AddSigningCredential(Certificate.Get(Configuration.GetValue<string>("SigningCertificate")))
         .AddAspNetIdentity<ApplicationUser>()
         .AddConfigurationStore<Data.ConfigurationDbContext>(options =>
         {
@@ -101,7 +107,7 @@ public class Startup
             app.UseHsts();
         }
 
-        // app.UseHttpsRedirection();
+        app.UseHttpsRedirection();
         app.UseStaticFiles();
 
         app.Use(async (context, next) =>

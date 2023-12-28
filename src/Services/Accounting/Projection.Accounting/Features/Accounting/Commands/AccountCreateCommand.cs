@@ -13,7 +13,7 @@ public class AccountCreateCommand :  BaseCommand<Account>
     public string Name { get; set; }
 
     [DataMember]
-    public string AccountNumber { get; set; }
+    public string AccountNumber { get; private set; }
 
     [DataMember]
     public string GSTNumber { get; set; }
@@ -33,10 +33,20 @@ public class AccountCreateCommand :  BaseCommand<Account>
     [DataMember]
     public string CreatedBy { get; private set; }
 
-    public AccountCreateCommand(string name, string accountNumber, string gstNumber, string panNumber, string currencyId, double balance, string createdBy, string description)
+    [DataMember]
+    private readonly List<PointOfContact> _contacts;
+
+    [DataMember]
+    public IEnumerable<PointOfContact> Contacts => _contacts;
+
+    public AccountCreateCommand()
+    {
+        _contacts = new List<PointOfContact>();
+    }
+
+    public AccountCreateCommand(string name, string gstNumber, string panNumber, string currencyId, double balance, string createdBy, string description, List<PointOfContact> contacts): this()
     {
         Name = name;
-        AccountNumber = accountNumber;
         GSTNumber = gstNumber;
         PANNumber = panNumber;
         CurrencyId = currencyId;
@@ -44,5 +54,17 @@ public class AccountCreateCommand :  BaseCommand<Account>
         Description = description;
         CreatedBy = createdBy;
         Id = Guid.NewGuid().ToString();
+        _contacts = contacts;
+        AccountNumber = AccountNumberGenerator(15);
+    }
+
+
+    private static Random random = new Random();
+
+    private static string AccountNumberGenerator(int length)
+    {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        return new string(Enumerable.Repeat(chars, length)
+            .Select(s => s[random.Next(s.Length)]).ToArray());
     }
 }

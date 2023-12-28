@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Projection.ServiceDefaults\Projection.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\EventBus\Projection.EventBusRabbitMQ\Projection.EventBusRabbitMQ.csproj" />
+    <ProjectReference Include="..\Projection.UI.Web.Client\Projection.UI.Web.Client.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" />
+    <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" />
+    <PackageReference Include="Newtonsoft.Json" />
+
+  </ItemGroup>
+</Project>

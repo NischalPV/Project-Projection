@@ -55,6 +55,7 @@ public class AccountCreateCommandHandler : IRequestHandler<AccountCreateCommand,
             CurrencyId = request.CurrencyId,
             Name= request.Name,
             Description = request.Description,
+            Contacts = request.Contacts.ToList()
         };
 
         _logger.LogInformation("----- Creating Account - Account: {@Account}", account);

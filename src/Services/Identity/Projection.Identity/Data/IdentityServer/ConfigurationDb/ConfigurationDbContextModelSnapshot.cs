@@ -269,7 +269,7 @@ namespace Projection.Identity.Data.IdentityServer.ConfigurationDb
                         new
                         {
                             Id = 1,
-                            Created = new DateTime(2023, 12, 9, 20, 30, 52, 656, DateTimeKind.Utc).AddTicks(1865),
+                            Created = new DateTime(2023, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             DisplayName = "Accounting API Scope",
                             Emphasize = false,
                             Enabled = true,
@@ -520,18 +520,18 @@ namespace Projection.Identity.Data.IdentityServer.ConfigurationDb
                             AbsoluteRefreshTokenLifetime = 2592000,
                             AccessTokenLifetime = 3600,
                             AccessTokenType = 0,
-                            AllowAccessTokensViaBrowser = true,
-                            AllowOfflineAccess = false,
+                            AllowAccessTokensViaBrowser = false,
+                            AllowOfflineAccess = true,
                             AllowPlainTextPkce = false,
                             AllowRememberConsent = true,
-                            AlwaysIncludeUserClaimsInIdToken = false,
+                            AlwaysIncludeUserClaimsInIdToken = true,
                             AlwaysSendClientClaims = false,
                             AuthorizationCodeLifetime = 300,
                             BackChannelLogoutSessionRequired = true,
                             ClientClaimsPrefix = "client_",
                             ClientId = "projection-ui",
                             ClientName = "Projection Frontend UI OpenId Client",
-                            ClientUri = "https://localhost:6004",
+                            ClientUri = "https://localhost:7140",
                             Created = new DateTime(2022, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             DPoPClockSkew = new TimeSpan(0, 0, 5, 0, 0),
                             DPoPValidationMode = 0,
@@ -549,7 +549,7 @@ namespace Projection.Identity.Data.IdentityServer.ConfigurationDb
                             RequireClientSecret = true,
                             RequireConsent = false,
                             RequireDPoP = false,
-                            RequirePkce = true,
+                            RequirePkce = false,
                             RequireRequestObject = false,
                             SlidingRefreshTokenLifetime = 1296000,
                             UpdateAccessTokenClaimsOnRefresh = false
@@ -619,7 +619,7 @@ namespace Projection.Identity.Data.IdentityServer.ConfigurationDb
                             EnableLocalLogin = true,
                             Enabled = true,
                             FrontChannelLogoutSessionRequired = true,
-                            IdentityTokenLifetime = 300,
+                            IdentityTokenLifetime = 3600,
                             IncludeJwtId = true,
                             NonEditable = false,
                             ProtocolType = "oidc",
@@ -731,7 +731,7 @@ namespace Projection.Identity.Data.IdentityServer.ConfigurationDb
                         {
                             Id = 1,
                             ClientId = 1,
-                            Origin = "https://localhost:6004"
+                            Origin = "https://localhost:7140"
                         },
                         new
                         {
@@ -781,7 +781,7 @@ namespace Projection.Identity.Data.IdentityServer.ConfigurationDb
                         {
                             Id = 1,
                             ClientId = 1,
-                            GrantType = "implicit"
+                            GrantType = "authorization_code"
                         },
                         new
                         {
@@ -855,7 +855,7 @@ namespace Projection.Identity.Data.IdentityServer.ConfigurationDb
                         {
                             Id = 1,
                             ClientId = 1,
-                            PostLogoutRedirectUri = "https://localhost:6004/"
+                            PostLogoutRedirectUri = "https://localhost:7140/signout-callback-oidc"
                         },
                         new
                         {
@@ -934,7 +934,7 @@ namespace Projection.Identity.Data.IdentityServer.ConfigurationDb
                         {
                             Id = 1,
                             ClientId = 1,
-                            RedirectUri = "https://localhost:6004/"
+                            RedirectUri = "https://localhost:7140/signin-oidc"
                         },
                         new
                         {
@@ -1008,7 +1008,7 @@ namespace Projection.Identity.Data.IdentityServer.ConfigurationDb
                         {
                             Id = 3,
                             ClientId = 1,
-                            Scope = "API"
+                            Scope = "AccountingAPI"
                         },
                         new
                         {
@@ -1027,6 +1027,12 @@ namespace Projection.Identity.Data.IdentityServer.ConfigurationDb
                             Id = 8,
                             ClientId = 4,
                             Scope = "AccountingAPI"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            ClientId = 1,
+                            Scope = "offline_access"
                         });
                 });
 
@@ -1071,10 +1077,18 @@ namespace Projection.Identity.Data.IdentityServer.ConfigurationDb
                         new
                         {
                             Id = 1,
-                            ClientId = 2,
-                            Created = new DateTime(2023, 12, 9, 20, 30, 52, 656, DateTimeKind.Utc).AddTicks(3668),
+                            ClientId = 1,
+                            Created = new DateTime(2023, 12, 23, 7, 20, 7, 984, DateTimeKind.Utc).AddTicks(1604),
                             Type = "SharedSecret",
-                            Value = "projection@2023"
+                            Value = "bUE6r4ekrGN8HLmiko/LoLEC1KIiDyqwNtte4dwjrHY="
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ClientId = 2,
+                            Created = new DateTime(2023, 12, 23, 7, 20, 7, 984, DateTimeKind.Utc).AddTicks(1963),
+                            Type = "SharedSecret",
+                            Value = "bUE6r4ekrGN8HLmiko/LoLEC1KIiDyqwNtte4dwjrHY="
                         });
                 });
 

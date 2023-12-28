@@ -1,0 +1,35 @@
+﻿@page "/accounts"
+@using Microsoft.AspNetCore.Authorization
+@using Projection.UI.Web.Models
+@attribute [StreamRendering]
+@attribute [Authorize]
+@inject AccountingService AccountingService
+
+<PageTitle>Accounts</PageTitle>
+<h1>Accounts</h1>
+
+@if (accounts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <FluentDataGrid Id="accountgrid" Items=@accounts GridTemplateColumns="1fr 1fr 1fr 2fr" TGridItem=Account>
+        <PropertyColumn Title="Account Number" Property="@(c => c!.AccountNumber)" Sortable="true" Align=Align.Start />
+        <PropertyColumn Title="Balance" Property="@(c => c!.Balance)" Sortable="true" Align=Align.Center />
+        <PropertyColumn Title="Created By" Property="@(c => c!.CreatedBy)" Sortable="true" Align=Align.Center />
+        <PropertyColumn Title="Created Date" Property="@(c => c!.CreatedDate)" Sortable="true" Align=Align.End />
+    </FluentDataGrid>
+}
+
+@code {
+    private IQueryable<Account>? accounts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var iAccounts = await AccountingService.GetAccounts();
+
+        accounts = iAccounts.Data.AsQueryable();
+    }
+
+}

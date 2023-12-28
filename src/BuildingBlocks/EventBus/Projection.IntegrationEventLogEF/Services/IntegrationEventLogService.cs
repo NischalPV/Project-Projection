@@ -21,7 +21,7 @@ public class IntegrationEventLogService<TContext> : IIntegrationEventLogService,
     public async Task<IEnumerable<IntegrationEventLogEntry>> RetrieveEventLogsPendingToPublishAsync(Guid transactionId)
     {
         var result = await _context.Set<IntegrationEventLogEntry>()
-            .Where(e => e.TransactionId.ToString() == transactionId.ToString() && e.State == EventStateEnum.NotPublished)
+            .Where(e => e.State == EventStateEnum.NotPublished)
             .ToListAsync();
 
         if (result.Count != 0)

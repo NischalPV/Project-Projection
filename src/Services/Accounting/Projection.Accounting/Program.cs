@@ -41,7 +41,18 @@ builder.Services.AddApiVersioning(
         config.ApiVersionReader = new UrlSegmentApiVersionReader();
     });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy",
+        builder => builder
+        .SetIsOriginAllowed((host) => true)
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials());
+});
 
+
+builder.Services.AddExceptionHandler<HttpGlobalExceptionHandler>();
 
 builder.Services.AddProblemDetails();
 

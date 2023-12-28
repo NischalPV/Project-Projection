@@ -7,6 +7,8 @@ string AppName = Namespace.Substring(Namespace.LastIndexOf('.', Namespace.LastIn
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddServiceDefaults();
+
 var configuration = GetConfiguration();
 
 Log.Logger = CreateSerilogLogger(configuration);

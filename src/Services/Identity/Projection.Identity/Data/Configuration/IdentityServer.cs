@@ -107,6 +107,7 @@ public class IdentityServer
                     Emphasize = false,
                     ShowInDiscoveryDocument = true,
                     Id = 1,
+                    Created = new DateTime(2023, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddTicks(0),
                 },
             };
     }
@@ -239,20 +240,20 @@ public class IdentityServer
                     RequireClientSecret = true,
                     ClientName = "Projection Frontend UI OpenId Client",
                     Description = "Projection Frontend UI OpenId Client for Development",
-                    ClientUri = $"https://localhost:6004",
+                    ClientUri = $"https://localhost:7140",
                     LogoUri = null,
                     RequireConsent = false,
                     AllowRememberConsent = true,
-                    AlwaysIncludeUserClaimsInIdToken = false,
-                    RequirePkce = true,
+                    AlwaysIncludeUserClaimsInIdToken = true,
+                    RequirePkce = false,
                     AllowPlainTextPkce = false,
                     RequireRequestObject = false,
-                    AllowAccessTokensViaBrowser = true,
+                    AllowAccessTokensViaBrowser = false,
                     FrontChannelLogoutSessionRequired = true,
                     FrontChannelLogoutUri = null,
                     BackChannelLogoutSessionRequired = true,
                     BackChannelLogoutUri = null,
-                    AllowOfflineAccess = false,
+                    AllowOfflineAccess = true,
                     IdentityTokenLifetime = 300,
                     AllowedIdentityTokenSigningAlgorithms = null,
                     AccessTokenLifetime = 3600,
@@ -349,7 +350,7 @@ public class IdentityServer
                     BackChannelLogoutSessionRequired = true,
                     BackChannelLogoutUri = null,
                     AllowOfflineAccess = false,
-                    IdentityTokenLifetime = 300,
+                    IdentityTokenLifetime = 3600,
                     AllowedIdentityTokenSigningAlgorithms = null,
                     AccessTokenLifetime = 3600,
                     AuthorizationCodeLifetime = 300,
@@ -437,7 +438,7 @@ public class IdentityServer
                 {
                     Id = 1,
                     ClientId = 1,
-                    Origin = $"https://localhost:6004"
+                    Origin = $"https://localhost:7140"
                 },
                 new ClientCorsOrigin()
                 {
@@ -498,7 +499,7 @@ public class IdentityServer
                 {
                     Id = 3,
                     ClientId = 1,
-                    Scope = "API"
+                    Scope = "AccountingAPI"
                 },
                 new ClientScope()
                 {
@@ -518,6 +519,12 @@ public class IdentityServer
                     ClientId = 4,
                     Scope = "AccountingAPI"
                 },
+                new ClientScope()
+                {
+                    Id = 9,
+                    ClientId = 1,
+                    Scope = Duende.IdentityServer.IdentityServerConstants.StandardScopes.OfflineAccess
+                },
             };
     }
 
@@ -533,7 +540,7 @@ public class IdentityServer
                 {
                     Id = 1,
                     ClientId = 1,
-                    GrantType = "implicit"
+                    GrantType = "authorization_code"
                 },
                 new ClientGrantType()
                 {
@@ -568,7 +575,7 @@ public class IdentityServer
                 {
                     Id = 1,
                     ClientId = 1,
-                    PostLogoutRedirectUri = $"https://localhost:6004/"
+                    PostLogoutRedirectUri = $"https://localhost:7140/signout-callback-oidc"
                 },
                 new ClientPostLogoutRedirectUri()
                 {
@@ -604,7 +611,7 @@ public class IdentityServer
                 {
                     Id = 1,
                     ClientId = 1,
-                    RedirectUri = $"https://localhost:6004/"
+                    RedirectUri = $"https://localhost:7140/signin-oidc"
                 },
                 new ClientRedirectUri()
                 {
@@ -635,8 +642,14 @@ public class IdentityServer
             new ClientSecret()
             {
                 Id = 1,
+                ClientId = 1,
+                Value = "projection@2023".Sha256(),
+            },
+            new ClientSecret()
+            {
+                Id = 2,
                 ClientId = 2,
-                Value = "projection@2023",
+                Value = "projection@2023".Sha256(),
             }
         };
     }

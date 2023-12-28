@@ -4,6 +4,7 @@
 @attribute [StreamRendering]
 @attribute [Authorize]
 @inject AccountingService AccountingService
+@inject UserService UserService
 
 <PageTitle>Accounts</PageTitle>
 <h1>Accounts</h1>
@@ -14,22 +15,62 @@
 }
 else
 {
-    <FluentDataGrid Id="accountgrid" Items=@accounts GridTemplateColumns="1fr 1fr 1fr 2fr" TGridItem=Account>
-        <PropertyColumn Title="Account Number" Property="@(c => c!.AccountNumber)" Sortable="true" Align=Align.Start />
-        <PropertyColumn Title="Balance" Property="@(c => c!.Balance)" Sortable="true" Align=Align.Center />
-        <PropertyColumn Title="Created By" Property="@(c => c!.CreatedBy)" Sortable="true" Align=Align.Center />
-        <PropertyColumn Title="Created Date" Property="@(c => c!.CreatedDate)" Sortable="true" Align=Align.End />
+    <FluentDataGrid Id="accountgrid" Items=@FilteredItems GridTemplateColumns="1fr 1fr 1fr 2fr" TGridItem=Account ResizableColumns=true Pagination="@pagination">
+        <PropertyColumn Title="Account Number" Property="@(c => c!.AccountNumber)" Sortable="true" Align=Align.Start>
+            <ColumnOptions>
+                <div class="search-box">
+                    <FluentSearch type="search" Autofocus=true @bind-Value=accountFilter @oninput="HandleAccountFilter" @bind-Value:after="HandleClear" Placeholder="Account Number..." />
+                </div>
+            </ColumnOptions>
+        </PropertyColumn>
+        <PropertyColumn Title="Balance" Property="@(c => c!.BalanceWithCurrency)" Sortable="true" Align=Align.End />
+        <PropertyColumn Title="Created By" Property="@(c => c!.CreatedByUser)" Sortable="true" Align=Align.Start />
+        <PropertyColumn Title="Created Date" Property="@(c => c!.CreatedDate)" Sortable="true" Align=Align.Start />
+        <TemplateColumn Title="Status">
+            <FluentBadge Appearance="@(context.Appearance)">
+                @context.StatusName
+            </FluentBadge>
+        </TemplateColumn>
     </FluentDataGrid>
+
+    <FluentPaginator State="@pagination" />
 }
 
 @code {
     private IQueryable<Account>? accounts;
+    PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
+    string accountFilter = string.Empty;
+
+    IQueryable<Account>? FilteredItems => accounts?.Where(x => x.AccountNumber.Contains(accountFilter, StringComparison.CurrentCultureIgnoreCase));
 
     protected override async Task OnInitializedAsync()
     {
         var iAccounts = await AccountingService.GetAccounts();
 
+        foreach (var account in iAccounts.Data)
+        {
+            account.CreatedByUser = (await UserService.GetUserDetailsAsync(account.CreatedBy)).FullName;
+        }
+
+        //iAccounts.Data.ForEach(async account => account.CreatedByUser = (await UserService.GetUserDetailsAsync(account.CreatedBy)).FullName);
+
         accounts = iAccounts.Data.AsQueryable();
+    }
+
+    private void HandleAccountFilter(ChangeEventArgs args)
+    {
+        if (args.Value is string value)
+        {
+            accountFilter = value;
+        }
+    }
+
+    private void HandleClear()
+    {
+        if (string.IsNullOrWhiteSpace(accountFilter))
+        {
+            accountFilter = string.Empty;
+        }
     }
 
 }

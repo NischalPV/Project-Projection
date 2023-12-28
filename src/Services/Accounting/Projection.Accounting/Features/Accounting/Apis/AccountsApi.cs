@@ -6,6 +6,7 @@ using Projection.Accounting.Core.Entities;
 using Projection.Accounting.Features.Accounting.Commands;
 using Projection.Accounting.Features.Accounting.Requests;
 using Projection.Accounting.Features.Accounting.Services;
+using Projection.Accounting.Features.Accounting.Specifications;
 using Projection.BuildingBlocks.EventBus.Extensions;
 using Projection.BuildingBlocks.Shared.Models.ViewModels;
 using System.Security.Principal;
@@ -32,7 +33,7 @@ public static class AccountsApi
     /// <returns></returns>
     public static async Task<Ok<ResultViewModel<List<Account>>>> GetAccountsAsync([AsParameters] AccountServices services)
     {
-        var accounts = await services.Repository.ListAllAsync();
+        var accounts = await services.Repository.ListAllAsync(new AccountWithStatusSpecification());
 
         ResultViewModel<List<Account>> result = new()
         {

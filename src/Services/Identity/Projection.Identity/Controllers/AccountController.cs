@@ -265,9 +265,25 @@ public class AccountController : Controller
     {
         return View();
     }
-    
+
     #endregion
 
+    #region UserInformation
+    [HttpGet]
+    //[Authorize]
+    public async Task<IActionResult> UserInformation(string id)
+    {
+        var user = await _userManager.FindByIdAsync(id);
+
+        if (user == null)
+        {
+            return NotFound("User not found");
+        }
+
+        // Return user details
+        return Ok(user);
+    }
+    #endregion
 
     #region Helpers
     private async Task<LoginViewModel> BuildLoginViewModelAsync(LoginViewModel model)

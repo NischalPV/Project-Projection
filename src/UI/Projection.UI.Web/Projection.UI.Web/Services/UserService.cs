@@ -1,25 +1,24 @@
 ﻿using System.Net.Http.Headers;
 using System.Net.Http;
 using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Projection.UI.Web.Services;
 
 public class UserService(HttpClient httpClient)
 {
-    private readonly string remoteServiceBaseUrl = "/connect/userinfo";
-
-    public async Task<UserDetailsDto> GetUserDetailsAsync(string accessToken)
+    public async Task<UserDetailsDto> GetUserDetailsAsync(string id)
     {
-        // Set the access token in the Authorization header
-        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-
         // Make a request to the UserInfo endpoint
-        var response = await httpClient.GetAsync("connect/userinfo");
+        var response = await httpClient.GetAsync($"account/userinformation/{id}");
 
         if (response.IsSuccessStatusCode)
         {
             var content = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<UserDetailsDto>(content);
+
+            var result = JsonConvert.DeserializeObject<UserDetailsDto>(content)!;
+
+            return result;
         }
 
         // Handle error scenarios
@@ -29,7 +28,8 @@ public class UserService(HttpClient httpClient)
 
 public class UserDetailsDto
 {
-    public string Sub { get; set; } // Subject - User ID
-    public string Name { get; set; } // User Name
-    // Add other properties as needed
+    public string Id { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string FullName { get;set; }
 }

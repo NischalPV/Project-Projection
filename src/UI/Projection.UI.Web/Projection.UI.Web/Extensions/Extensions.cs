@@ -11,6 +11,9 @@ public static class Extensions
 {
     public static void AddApplicationServices(this IHostApplicationBuilder builder)
     {
+        var configuration = builder.Configuration;
+        var identityUrl = configuration.GetRequiredValue("IdentityUrl");
+
         builder.AddAuthenticationServices();
 
         builder.AddRabbitMqEventBus("EventBus")
@@ -21,7 +24,7 @@ public static class Extensions
         builder.Services.AddHttpClient<AccountingService>(o => o.BaseAddress = new("http://projection-accounting"))
             .AddAuthToken();
 
-        builder.Services.AddHttpClient<UserService>(o => o.BaseAddress = new("http://projection-identity"))
+        builder.Services.AddHttpClient<UserService>(o => o.BaseAddress = new(identityUrl))
             .AddAuthToken();
     }
 

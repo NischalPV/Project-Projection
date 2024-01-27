@@ -14,8 +14,11 @@ var webUi = builder.AddProject<Projects.Projection_UI_Web>("projection-ui-web")
     .WithEnvironmentForServiceBinding("IdentityUrl", identity)
     .WithLaunchProfile("https");
 
+var apiGateway = builder.AddProject<Projects.Projection_ApiGateway>("projection-apigateway");
+
 webUi.WithEnvironmentForServiceBinding("CallBackUrl", webUi, bindingName: "https");
 
 identity.WithEnvironmentForServiceBinding("webUiClient", webUi, bindingName: "https");
+
 
 builder.Build().Run();

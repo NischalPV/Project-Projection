@@ -1,8 +1,11 @@
-﻿using Duende.Bff.Yarp;
+using Duende.Bff.Yarp;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddBff();
+builder.AddServiceDefaults();
+
+builder.Services.AddBff()
+    .AddRemoteApis();
 
 builder.Services.AddReverseProxy()
     .AddBffExtensions()
@@ -12,6 +15,8 @@ builder.Services.AddReverseProxy()
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 app.MapReverseProxy()
     .AsBffApiEndpoint();

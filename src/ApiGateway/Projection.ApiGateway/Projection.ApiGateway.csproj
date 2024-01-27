@@ -12,6 +12,9 @@
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
   <ItemGroup>
     <PackageReference Include="Yarp.ReverseProxy" />
-    <PackageReference Include="Duende.BFF.Yarp"/>
+    <PackageReference Include="Duende.BFF.Yarp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Projection.ServiceDefaults\Projection.ServiceDefaults.csproj" />
   </ItemGroup>
 </Project>

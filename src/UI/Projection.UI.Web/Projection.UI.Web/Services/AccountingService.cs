@@ -6,7 +6,7 @@ namespace Projection.UI.Web.Services;
 
 public class AccountingService(HttpClient httpClient)
 {
-    private readonly string remoteServiceBaseUrl = "/api/accounts";
+    private readonly string remoteServiceBaseUrl = "/accounting/api/accounts";
 
     public Task<ResultViewModel<List<Account>>> GetAccounts()
     {

@@ -22,7 +22,7 @@ public static class AccountsApi
         app.MapPost("/", CreateAccountAsync);
         app.MapPut("/{id}", UpdateAccountAsync);
         app.MapDelete("/{id}", DeleteAccountAsync);
-            
+
         return app;
     }
 
@@ -74,7 +74,7 @@ public static class AccountsApi
 
         result.Data = account;
 
-        if(account is null)
+        if (account is null)
         {
             result.IsSuccess = false;
             result.Result = new ResultMessage()
@@ -108,7 +108,7 @@ public static class AccountsApi
             result.TotalCount = 1;
 
         }
-        
+
 
         return TypedResults.Ok(result);
     }
@@ -223,7 +223,7 @@ public static class AccountsApi
             return TypedResults.BadRequest("RequestId is missing.");
         }
 
-        if(string.IsNullOrWhiteSpace(id))
+        if (string.IsNullOrWhiteSpace(id))
         {
             services.Logger.LogWarning("Invalid IntegrationEvent - Id is missing - {@IntegrationEvent}", request);
             return TypedResults.BadRequest("Id is missing.");
@@ -264,6 +264,19 @@ public static class AccountsApi
         }
     }
 
+    /// <summary>
+    /// Delete existing account
+    /// </summary>
+    /// <param name="requestId">
+    /// Unique uuid for each request
+    /// </param>
+    /// <param name="id">
+    /// Account Id to be deleted
+    /// </param>
+    /// <param name="services"></param>
+    /// <returns>
+    /// True if account is deleted successfully
+    /// </returns>
     public static async Task<Results<Ok<bool>, BadRequest<string>, ProblemHttpResult>> DeleteAccountAsync([FromHeader(Name = "x-requestid")] Guid requestId, string id, [AsParameters] AccountServices services)
     {
         services.Logger.LogInformation(
@@ -310,5 +323,53 @@ public static class AccountsApi
                 return TypedResults.Problem(detail: $"AccountDeleteCommand failed. Reason: {result}", statusCode: StatusCodes.Status500InternalServerError);
             }
         }
-    }   
+    }
+
+    public static async Task<Results<Ok<bool>, BadRequest<string>, ProblemHttpResult>> Upload([FromHeader(Name = "x-requestid")] Guid requestId, UploadAccountsFileRequest request, [AsParameters] AccountServices services)
+    {
+        services.Logger.LogInformation(
+            "Sending command: {CommandName} - {IdProperty}: {CommandId})",
+            nameof(AccountUploadCommand),
+            nameof(AccountUploadCommand.Id),
+            request.AccountsFile.FileName);
+
+        if (requestId == Guid.Empty)
+        {
+            services.Logger.LogWarning("Invalid IntegrationEvent - RequestId is missing - {@IntegrationEvent}", request.AccountsFile.FileName);
+            return TypedResults.BadRequest("RequestId is missing.");
+        }
+
+        if (request.AccountsFile is null)
+        {
+            services.Logger.LogWarning("Invalid IntegrationEvent - File is missing - {@IntegrationEvent}", request.AccountsFile.FileName);
+            return TypedResults.BadRequest("File is missing.");
+        }
+
+        using (services.Logger.BeginScope(new List<KeyValuePair<string, object>> { new("IdentifiedCommandId", requestId) }))
+        {
+            var command = new AccountUploadCommand(request.AccountsFile);
+
+            //var requestUploadAccount = new IdentifiedCommand<AccountUploadCommand, string>(command, requestId);
+
+            services.Logger.LogInformation(
+                "Sending command: {CommandName} - {IdProperty}: {CommandId} ({@Command})",
+                command.GetGenericTypeName(),
+                nameof(command.Id),
+                command.Id,
+                command);
+
+            var result = await services.Mediator.Send(command);
+
+            if (result == String.Empty)
+            {
+                services.Logger.LogInformation("AccountUploadCommand succeeded - RequestId: {RequestId}", requestId);
+                return TypedResults.Ok(true);
+            }
+            else
+            {
+                services.Logger.LogWarning("AccountUploadCommand failed - RequestId: {RequestId}", requestId);
+                return TypedResults.Problem(detail: $"AccountUploadCommand failed. Reason: {result}", statusCode: StatusCodes.Status500InternalServerError);
+            }
+        }
+    }
 }

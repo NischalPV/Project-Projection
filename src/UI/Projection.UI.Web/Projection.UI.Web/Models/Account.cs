@@ -18,7 +18,7 @@ public record Account
     public string CreatedByUser { get; set; }
     public string CurrencySymbol => Currency.AlphabeticCode;
     public string StatusName => Status.Name;
-    public string BalanceWithCurrency => $"{Currency.AlphabeticCode} {Balance}";
+    public string BalanceWithCurrency => $"{Currency?.AlphabeticCode} {Balance}";
 
     public Appearance Appearance => Status.Id == 8 ? Appearance.Lightweight : Appearance.Neutral;
 }

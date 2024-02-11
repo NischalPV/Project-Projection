@@ -21,7 +21,7 @@ public static class Extensions
 
         builder.Services.AddScoped<LogOutService>();
 
-        builder.Services.AddHttpClient<AccountingService>(o => o.BaseAddress = new("http://projection-accounting"))
+        builder.Services.AddHttpClient<AccountingService>(o => o.BaseAddress = new("http://projection-apigateway"))
             .AddAuthToken();
 
         builder.Services.AddHttpClient<UserService>(o => o.BaseAddress = new(identityUrl))

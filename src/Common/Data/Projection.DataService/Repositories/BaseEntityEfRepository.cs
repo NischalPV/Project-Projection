@@ -28,6 +28,13 @@ public class BaseEntityEfRepository<TEntity, TKey, TContext> : IBaseEntityAsyncR
     #region interface implementation
     public IUnitOfWork UnitOfWork { get { return _ctx; } }
 
+    /// <summary>
+    /// Adds an entity asynchronously, saving changes based on the doSave parameter.
+    /// </summary>
+    /// <param name="entity">The entity to add.</param>
+    /// <param name="doSave">Whether to save changes to the context.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The added entity.</returns>
     public async Task<TEntity> AddAsync(TEntity entity, bool doSave = true, CancellationToken cancellationToken = default)
     {
         if (doSave)
@@ -50,6 +57,34 @@ public class BaseEntityEfRepository<TEntity, TKey, TContext> : IBaseEntityAsyncR
 
         return entity;
 
+    }
+
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="entities"></param>
+    /// <param name="doSave"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public async Task AddRangeAsync(IEnumerable<TEntity> entities, bool doSave = true, CancellationToken cancellationToken = default)
+    {
+        if (doSave)
+        {
+            try
+            {
+                await _ctx.Set<TEntity>().AddRangeAsync(entities);
+                await _ctx.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occured while adding entities: {typeof(TEntity).Name}");
+            }
+        }
+        else
+        {
+            await _ctx.Set<TEntity>().AddRangeAsync(entities);
+        }
     }
 
     public async Task<int> CountAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
@@ -89,10 +124,12 @@ public class BaseEntityEfRepository<TEntity, TKey, TContext> : IBaseEntityAsyncR
         return await _ctx.Set<TEntity>().ToListAsync();
     }
 
+
     public async Task<List<TEntity>> ListAllAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
     {
         return await ApplySpecification(specification).ToListAsync();
     }
+
 
     public async Task<TEntity> UpdateAsync(TEntity entity, bool doSave = true, CancellationToken cancellationToken = default)
     {

@@ -16,6 +16,7 @@
     <ProjectReference Include="..\src\ApiGateway\Projection.ApiGateway\Projection.ApiGateway.csproj" />
     <ProjectReference Include="..\src\Services\Accounting\Projection.Accounting\Projection.Accounting.csproj" />
     <ProjectReference Include="..\src\Services\Identity\Projection.Identity\Projection.Identity.csproj" />
+    <ProjectReference Include="..\src\Services\Orchestration\Projection.Orchestration\Projection.Orchestration.csproj" />
     <ProjectReference Include="..\src\UI\Projection.UI.Web\Projection.UI.Web\Projection.UI.Web.csproj" />
   </ItemGroup>
 

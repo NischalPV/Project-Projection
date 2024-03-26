@@ -26,12 +26,23 @@ public record Account : BaseEntity<string>
         CreatedDate = DateTime.UtcNow;
 
         AddAccountCreatedDomainEvent();
+
+        AccountNumber = AccountNumberGenerator(15);
     }
 
     private void AddAccountCreatedDomainEvent()
     {
         var accountCreatedDomainEvent = new AccountCreatedDomainEvent(this);
         this.AddDomainEvent(accountCreatedDomainEvent);
+    }
+
+    private static Random random = new Random();
+
+    private static string AccountNumberGenerator(int length)
+    {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        return new string(Enumerable.Repeat(chars, length)
+            .Select(s => s[random.Next(s.Length)]).ToArray());
     }
 }
 

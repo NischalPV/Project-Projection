@@ -19,8 +19,13 @@ internal class AccountEntityTypeConfiguration: IEntityTypeConfiguration<Account>
 
         builder.HasQueryFilter(x => x.IsActive);
 
-        builder.OwnsMany(x => x.Contacts).ToJson("Contacts");
-        builder.HasMany(x => x.Transactions).WithOne(x => x.Account).HasForeignKey(x => x.AccountId).OnDelete(DeleteBehavior.Cascade);
+        builder.OwnsMany(x => x.Contacts)
+            .ToJson("Contacts");
+
+        builder.HasMany(x => x.Transactions)
+            .WithOne(x => x.Account)
+            .HasForeignKey(x => x.AccountId)
+            .OnDelete(DeleteBehavior.Cascade);
 
     }
 }   

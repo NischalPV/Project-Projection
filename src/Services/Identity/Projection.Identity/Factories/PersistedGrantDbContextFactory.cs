@@ -21,7 +21,8 @@ public class PersistedGrantDbContextFactory : IDesignTimeDbContextFactory<Persis
         var optionsBuilder = new DbContextOptionsBuilder<PersistedGrantDbContext>();
         var operationOptions = new OperationalStoreOptions();
 
-        optionsBuilder.UseNpgsql(config["ConnectionStrings:DefaultConnection"], npgsqlOptionsAction: o => o.MigrationsAssembly("Projection.Identity"));
+        //optionsBuilder.UseNpgsql(config["ConnectionStrings:DefaultConnection"], npgsqlOptionsAction: o => o.MigrationsAssembly("Projection.Identity"));
+        optionsBuilder.UseSqlServer(config["ConnectionStrings:DefaultConnection"], sqlServerOptionsAction: o => o.MigrationsAssembly("Projection.Identity"));
 
         var dbContext = new PersistedGrantDbContext(optionsBuilder.Options);
         dbContext.StoreOptions = operationOptions;

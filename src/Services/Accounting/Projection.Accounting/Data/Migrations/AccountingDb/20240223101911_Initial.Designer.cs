@@ -2,9 +2,9 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Projection.Accounting.Infrastructure.Data;
 
 #nullable disable
@@ -12,7 +12,7 @@ using Projection.Accounting.Infrastructure.Data;
 namespace Projection.Accounting.Data.Migrations.AccountingDb
 {
     [DbContext(typeof(AccountingDbContext))]
-    [Migration("20231209203540_Initial")]
+    [Migration("20240223101911_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -21,65 +21,70 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("accounting")
-                .HasAnnotation("ProductVersion", "8.0.0")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+                .HasAnnotation("ProductVersion", "8.0.2")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("Projection.Accounting.Core.Entities.Account", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("AccountNumber")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Balance")
-                        .HasColumnType("double precision");
+                        .HasColumnType("float");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CurrencyId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("GSTNumber")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
+                        .HasColumnType("bit");
 
                     b.Property<int?>("LastStatusId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<string>("ModifiedBy")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PANNumber")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StatusChangedBy")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("StatusChangedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("StatusId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<string>("UniqueIdentifier")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CurrencyId");
 
                     b.HasIndex("LastStatusId");
 
@@ -91,55 +96,55 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
             modelBuilder.Entity("Projection.Accounting.Core.Entities.AccountTransaction", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("AccountId")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<double>("Amount")
-                        .HasColumnType("double precision");
+                        .HasColumnType("float");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
+                        .HasColumnType("bit");
 
                     b.Property<int?>("LastStatusId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<string>("ModifiedBy")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StatusChangedBy")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("StatusChangedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("StatusId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("TransactionDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("TransactionTypeId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<string>("UniqueIdentifier")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -154,52 +159,169 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
                     b.ToTable("AccountTransactions", "accounting");
                 });
 
+            modelBuilder.Entity("Projection.Accounting.Core.Entities.Country", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("LastStatusId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StatusChangedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("StatusChangedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UniqueIdentifier")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LastStatusId");
+
+                    b.HasIndex("StatusId");
+
+                    b.ToTable("Countries", "dbo");
+                });
+
+            modelBuilder.Entity("Projection.Accounting.Core.Entities.Currency", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AlphabeticCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CountryId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("LastStatusId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("NumericCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StatusChangedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("StatusChangedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Symbol")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UniqueIdentifier")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CountryId");
+
+                    b.HasIndex("LastStatusId");
+
+                    b.HasIndex("StatusId");
+
+                    b.ToTable("Currencies", "dbo");
+                });
+
             modelBuilder.Entity("Projection.Accounting.Core.Entities.TransactionType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
+                        .HasColumnType("bit");
 
                     b.Property<int?>("LastStatusId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<string>("ModifiedBy")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("Multiplier")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StatusChangedBy")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("StatusChangedDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("StatusId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<string>("UniqueIdentifier")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -213,7 +335,7 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
                         new
                         {
                             Id = 1,
-                            CreatedDate = new DateTime(2023, 12, 9, 20, 35, 38, 598, DateTimeKind.Utc).AddTicks(9240),
+                            CreatedDate = new DateTime(2024, 2, 23, 10, 19, 10, 781, DateTimeKind.Utc).AddTicks(6587),
                             Description = "Credit transaction",
                             IsActive = true,
                             Multiplier = 1,
@@ -223,7 +345,7 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
                         new
                         {
                             Id = 2,
-                            CreatedDate = new DateTime(2023, 12, 9, 20, 35, 38, 598, DateTimeKind.Utc).AddTicks(9245),
+                            CreatedDate = new DateTime(2024, 2, 23, 10, 19, 10, 781, DateTimeKind.Utc).AddTicks(6596),
                             Description = "Debit transaction",
                             IsActive = true,
                             Multiplier = -1,
@@ -232,23 +354,41 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
                         });
                 });
 
+            modelBuilder.Entity("Projection.BuildingBlocks.Shared.Idempotency.ClientRequest", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Requests", "accounting");
+                });
+
             modelBuilder.Entity("Projection.Common.BaseEntities.Status", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Statuses", "public");
+                    b.ToTable("Statuses", "dbo");
 
                     b.HasData(
                         new
@@ -369,6 +509,10 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
 
             modelBuilder.Entity("Projection.Accounting.Core.Entities.Account", b =>
                 {
+                    b.HasOne("Projection.Accounting.Core.Entities.Currency", "Currency")
+                        .WithMany()
+                        .HasForeignKey("CurrencyId");
+
                     b.HasOne("Projection.Common.BaseEntities.Status", "LastStatus")
                         .WithMany()
                         .HasForeignKey("LastStatusId");
@@ -379,6 +523,41 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.OwnsMany("Projection.Accounting.Core.Entities.PointOfContact", "Contacts", b1 =>
+                        {
+                            b1.Property<string>("AccountId")
+                                .HasColumnType("nvarchar(450)");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Email")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Name")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Notes")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Phone")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("AccountId", "Id");
+
+                            b1.ToTable("Accounts", "accounting");
+
+                            b1.ToJson("Contacts");
+
+                            b1.WithOwner()
+                                .HasForeignKey("AccountId");
+                        });
+
+                    b.Navigation("Contacts");
+
+                    b.Navigation("Currency");
+
                     b.Navigation("LastStatus");
 
                     b.Navigation("Status");
@@ -387,8 +566,9 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
             modelBuilder.Entity("Projection.Accounting.Core.Entities.AccountTransaction", b =>
                 {
                     b.HasOne("Projection.Accounting.Core.Entities.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountId");
+                        .WithMany("Transactions")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Projection.Common.BaseEntities.Status", "LastStatus")
                         .WithMany()
@@ -415,6 +595,46 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
                     b.Navigation("TransactionType");
                 });
 
+            modelBuilder.Entity("Projection.Accounting.Core.Entities.Country", b =>
+                {
+                    b.HasOne("Projection.Common.BaseEntities.Status", "LastStatus")
+                        .WithMany()
+                        .HasForeignKey("LastStatusId");
+
+                    b.HasOne("Projection.Common.BaseEntities.Status", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LastStatus");
+
+                    b.Navigation("Status");
+                });
+
+            modelBuilder.Entity("Projection.Accounting.Core.Entities.Currency", b =>
+                {
+                    b.HasOne("Projection.Accounting.Core.Entities.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId");
+
+                    b.HasOne("Projection.Common.BaseEntities.Status", "LastStatus")
+                        .WithMany()
+                        .HasForeignKey("LastStatusId");
+
+                    b.HasOne("Projection.Common.BaseEntities.Status", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Country");
+
+                    b.Navigation("LastStatus");
+
+                    b.Navigation("Status");
+                });
+
             modelBuilder.Entity("Projection.Accounting.Core.Entities.TransactionType", b =>
                 {
                     b.HasOne("Projection.Common.BaseEntities.Status", "LastStatus")
@@ -430,6 +650,11 @@ namespace Projection.Accounting.Data.Migrations.AccountingDb
                     b.Navigation("LastStatus");
 
                     b.Navigation("Status");
+                });
+
+            modelBuilder.Entity("Projection.Accounting.Core.Entities.Account", b =>
+                {
+                    b.Navigation("Transactions");
                 });
 #pragma warning restore 612, 618
         }

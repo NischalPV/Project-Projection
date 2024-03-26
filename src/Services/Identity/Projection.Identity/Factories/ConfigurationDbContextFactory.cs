@@ -20,7 +20,9 @@ public class ConfigurationDbContextFactory : IDesignTimeDbContextFactory<Configu
 
         var optionsBuilder = new DbContextOptionsBuilder<ConfigurationDbContext>();
         var storeOptions = new ConfigurationStoreOptions();
-        optionsBuilder.UseNpgsql(config["ConnectionStrings:DefaultConnection"], npgsqlOptionsAction: o => o.MigrationsAssembly("Projection.Identity"));
+
+        //optionsBuilder.UseNpgsql(config["ConnectionStrings:DefaultConnection"], npgsqlOptionsAction: o => o.MigrationsAssembly("Projection.Identity"));
+        optionsBuilder.UseSqlServer(config["ConnectionStrings:DefaultConnection"], sqlServerOptionsAction: o => o.MigrationsAssembly("Projection.Identity"));
 
         var dbContext = new ConfigurationDbContext(optionsBuilder.Options);
         dbContext.StoreOptions = storeOptions;

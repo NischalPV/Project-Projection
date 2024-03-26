@@ -9,7 +9,7 @@
 <AuthorizeView>
     <Authorized>
         <SiteSettings UserName="@context.User.Identity?.Name" ShowLogOutButton="true"/>
-        <div class="dropdown-menu">
+        @* <div class="dropdown-menu">
             <span class="dropdown-button"><img role="presentation" src="icons/user.svg" /></span>
             <div class="dropdown-content">
                 <form class="dropdown-item" method="post" action="user/logout" @formname="logout" @onsubmit="LogOutAsync">
@@ -17,7 +17,7 @@
                     <button type="submit">Log out</button>
                 </form>
             </div>
-        </div>
+        </div> *@
     </Authorized>
     <NotAuthorized>
         <a aria-label="Sign In" href="@Pages.User.LogIn.Url(Nav)"><img role="presentation" src="icons/user.svg" /></a>

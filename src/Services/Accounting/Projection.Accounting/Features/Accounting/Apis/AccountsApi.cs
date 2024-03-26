@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning.Conventions;
+using CsvHelper;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Projection.Accounting.Commands;
@@ -9,7 +10,10 @@ using Projection.Accounting.Features.Accounting.Services;
 using Projection.Accounting.Features.Accounting.Specifications;
 using Projection.BuildingBlocks.EventBus.Extensions;
 using Projection.BuildingBlocks.Shared.Models.ViewModels;
+using System.Globalization;
 using System.Security.Principal;
+using System.Text;
+using static Projection.Accounting.Features.Accounting.Commands.AccountUploadCommandHandler;
 
 namespace Projection.Accounting.Features.Accounting.Apis;
 
@@ -17,12 +21,13 @@ public static class AccountsApi
 {
     public static RouteGroupBuilder MapAccountsApi(this RouteGroupBuilder app)
     {
-        app.MapGet("/", GetAccountsAsync);
-        app.MapGet("/{id}", GetAccountAsync);
+        app.MapGet("/{pageIndex:int}", GetAccountsAsync);
+        app.MapGet("/{id:guid}", GetAccountAsync);
         app.MapPost("/", CreateAccountAsync);
         app.MapPut("/{id}", UpdateAccountAsync);
         app.MapDelete("/{id}", DeleteAccountAsync);
-            
+        app.MapPost("/upload", Upload);
+
         return app;
     }
 
@@ -31,9 +36,9 @@ public static class AccountsApi
     /// </summary>
     /// <param name="services"></param>
     /// <returns></returns>
-    public static async Task<Ok<ResultViewModel<List<Account>>>> GetAccountsAsync([AsParameters] AccountServices services)
+    public static async Task<Ok<ResultViewModel<List<Account>>>> GetAccountsAsync(int pageIndex, [AsParameters] AccountServices services)
     {
-        var accounts = await services.Repository.ListAllAsync(new AccountWithStatusSpecification());
+        var accounts = await services.Repository.ListAllAsync(new AccountWithStatusSpecification(pageIndex));
 
         ResultViewModel<List<Account>> result = new()
         {
@@ -49,7 +54,7 @@ public static class AccountsApi
             },
             PageCount = 1,
             PageNumber = 1,
-            PageSize = accounts.Count,
+            PageSize = 25,
             TotalCount = accounts.Count,
         };
 
@@ -74,7 +79,7 @@ public static class AccountsApi
 
         result.Data = account;
 
-        if(account is null)
+        if (account is null)
         {
             result.IsSuccess = false;
             result.Result = new ResultMessage()
@@ -108,7 +113,7 @@ public static class AccountsApi
             result.TotalCount = 1;
 
         }
-        
+
 
         return TypedResults.Ok(result);
     }
@@ -139,7 +144,7 @@ public static class AccountsApi
         using (services.Logger.BeginScope(new List<KeyValuePair<string, object>> { new("IdentifiedCommandId", requestId) }))
         {
             var loggedInUser = services.IdentityService.GetUserIdentity();
-            var command = new AccountCreateCommand(request.Name, request.GSTNumber.ToUpper(), request.PANNumber.ToUpper(), request.CurrencyId, request.Balance, loggedInUser, request.Description, request.Contacts);
+            var command = new AccountCreateCommand(request.Name, request.GSTNumber.ToUpper(), request.PANNumber.ToUpper(), request.Currency, request.Balance, loggedInUser, request.Description, request.Contacts);
 
             var requestCreateAccount = new IdentifiedCommand<AccountCreateCommand, Account>(command, requestId);
 
@@ -223,7 +228,7 @@ public static class AccountsApi
             return TypedResults.BadRequest("RequestId is missing.");
         }
 
-        if(string.IsNullOrWhiteSpace(id))
+        if (string.IsNullOrWhiteSpace(id))
         {
             services.Logger.LogWarning("Invalid IntegrationEvent - Id is missing - {@IntegrationEvent}", request);
             return TypedResults.BadRequest("Id is missing.");
@@ -264,6 +269,19 @@ public static class AccountsApi
         }
     }
 
+    /// <summary>
+    /// Delete existing account
+    /// </summary>
+    /// <param name="requestId">
+    /// Unique uuid for each request
+    /// </param>
+    /// <param name="id">
+    /// Account Id to be deleted
+    /// </param>
+    /// <param name="services"></param>
+    /// <returns>
+    /// True if account is deleted successfully
+    /// </returns>
     public static async Task<Results<Ok<bool>, BadRequest<string>, ProblemHttpResult>> DeleteAccountAsync([FromHeader(Name = "x-requestid")] Guid requestId, string id, [AsParameters] AccountServices services)
     {
         services.Logger.LogInformation(
@@ -310,5 +328,57 @@ public static class AccountsApi
                 return TypedResults.Problem(detail: $"AccountDeleteCommand failed. Reason: {result}", statusCode: StatusCodes.Status500InternalServerError);
             }
         }
-    }   
+    }
+
+    public static async Task<Results<Created<ResultViewModel<bool>>, BadRequest<string>, JsonHttpResult<ResultViewModel<RangeResult>>>> Upload([FromHeader(Name = "x-requestid")] Guid requestId, UploadAccountsFileRequest request, [AsParameters] AccountServices services)
+    {
+        services.Logger.LogInformation(
+            "Sending command: {CommandName} - {IdProperty}: {CommandId})",
+            nameof(AccountUploadCommand),
+            nameof(AccountUploadCommand.Id),
+            request.AccountsFile);
+
+        if (requestId == Guid.Empty)
+        {
+            services.Logger.LogWarning("Invalid IntegrationEvent - RequestId is missing - {@IntegrationEvent}", request.AccountsFile);
+            return TypedResults.BadRequest("RequestId is missing.");
+        }
+
+        if (request.AccountsFile is null)
+        {
+            services.Logger.LogWarning("Invalid IntegrationEvent - File is missing - {@IntegrationEvent}", request.AccountsFile);
+            return TypedResults.BadRequest("File is missing.");
+        }
+
+        using (services.Logger.BeginScope(new List<KeyValuePair<string, object>> { new("IdentifiedCommandId", requestId) }))
+        {
+            var command = new AccountUploadCommand(request.AccountsFile);
+
+            //var requestUploadAccount = new IdentifiedCommand<AccountUploadCommand, string>(command, requestId);
+
+            services.Logger.LogInformation(
+                "Sending command: {CommandName} - {IdProperty}: {CommandId} ({@Command})",
+                command.GetGenericTypeName(),
+                nameof(command.Id),
+                command.Id,
+                command);
+
+            var result = await services.Mediator.Send(command);
+
+            ResultViewModel<bool> response = new();
+            response.Data = result;
+            response.IsSuccess = true;
+            response.Result = new ResultMessage()
+            {
+                Code = StatusCodes.Status200OK,
+                Description = "Success",
+                Field = "",
+                Message = result == true ? $"File uploaded successfully." : "File upload failed.",
+                Type = "Success"
+            };
+            
+
+            return TypedResults.Created(String.Empty, response);
+        }
+    }
 }

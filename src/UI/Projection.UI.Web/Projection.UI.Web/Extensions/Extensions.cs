@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components.Server;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Projection.ServiceDefaults;
 using Projection.UI.Web.Services;
+using System.Reflection;
 
 public static class Extensions
 {
@@ -16,12 +17,12 @@ public static class Extensions
 
         builder.AddAuthenticationServices();
 
-        builder.AddRabbitMqEventBus("EventBus")
+        builder.AddRabbitMqEventBus("EventBus", typeof(Program).Assembly)
                .AddEventBusSubscriptions();
 
         builder.Services.AddScoped<LogOutService>();
 
-        builder.Services.AddHttpClient<AccountingService>(o => o.BaseAddress = new("http://projection-accounting"))
+        builder.Services.AddHttpClient<AccountingService>(o => o.BaseAddress = new("http://projection-apigateway"))
             .AddAuthToken();
 
         builder.Services.AddHttpClient<UserService>(o => o.BaseAddress = new(identityUrl))

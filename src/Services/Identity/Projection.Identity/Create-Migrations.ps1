@@ -59,9 +59,9 @@ Build-Project
 dotnet tool update --global dotnet-ef
 
 # Create migrations
-Add-Migration -dbContextName "ApplicationDbContext" -migrationName "Initial" -outputDir "Data/Migrations";
-Add-Migration -dbContextName "ConfigurationDbContext" -migrationName "Initial" -outputDir "Data/IdentityServer/ConfigurationDb";
-Add-Migration -dbContextName "PersistedGrantDbContext" -migrationName "Initial" -outputDir "Data/IdentityServer/PersistedGrantDb";
+Add-Migration -dbContextName "ApplicationDbContext" -migrationName "InitialSql" -outputDir "Data/Migrations";
+Add-Migration -dbContextName "ConfigurationDbContext" -migrationName "InitialSql" -outputDir "Data/Migrations/IdentityServer/ConfigurationDb";
+Add-Migration -dbContextName "PersistedGrantDbContext" -migrationName "InitialSql" -outputDir "Data/Migrations/IdentityServer/PersistedGrantDb";
 
 # Update database
 Update-Database -dbContextName "ApplicationDbContext";

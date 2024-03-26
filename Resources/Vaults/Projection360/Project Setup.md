@@ -1,0 +1,1 @@
+[x] Setup project framework

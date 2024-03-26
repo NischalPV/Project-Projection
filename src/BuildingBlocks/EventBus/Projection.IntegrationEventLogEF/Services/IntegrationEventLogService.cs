@@ -73,6 +73,12 @@ public class IntegrationEventLogService<TContext> : IIntegrationEventLogService,
         return _context.SaveChangesAsync();
     }
 
+
+    public async Task<IntegrationEventLogEntry> GetEventLogByIdAsync(Guid eventId)
+    {
+        return await _context.Set<IntegrationEventLogEntry>().FindAsync(eventId);
+    }
+
     protected virtual void Dispose(bool disposing)
     {
         if (!_disposedValue)
@@ -92,5 +98,6 @@ public class IntegrationEventLogService<TContext> : IIntegrationEventLogService,
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }
+
 }
 

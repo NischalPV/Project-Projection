@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using EFCore.BulkExtensions;
+using Microsoft.Extensions.Logging;
 using Projection.Common.Specifications;
 using Projection.DataService.Interfaces;
 using System;
@@ -28,6 +29,13 @@ public class BaseEntityEfRepository<TEntity, TKey, TContext> : IBaseEntityAsyncR
     #region interface implementation
     public IUnitOfWork UnitOfWork { get { return _ctx; } }
 
+    /// <summary>
+    /// Adds an entity asynchronously, saving changes based on the doSave parameter.
+    /// </summary>
+    /// <param name="entity">The entity to add.</param>
+    /// <param name="doSave">Whether to save changes to the context.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The added entity.</returns>
     public async Task<TEntity> AddAsync(TEntity entity, bool doSave = true, CancellationToken cancellationToken = default)
     {
         if (doSave)
@@ -40,15 +48,50 @@ public class BaseEntityEfRepository<TEntity, TKey, TContext> : IBaseEntityAsyncR
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"An error occured while adding entity: {typeof(TEntity).Name}");
+                _logger.LogError(ex, $"An error occurred while adding entity: {typeof(TEntity).Name}");
             }
         }
         else
         {
-                return _ctx.Set<TEntity>().Add(entity).Entity;
+            return _ctx.Set<TEntity>().Add(entity).Entity;
         }
 
         return entity;
+
+    }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="entities"></param>
+    /// <param name="doSave"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public async Task<int> AddRangeAsync(IEnumerable<TEntity> entities, bool doSave = true, CancellationToken cancellationToken = default)
+    {
+        if (doSave)
+        {
+            try
+            {
+                //await _ctx.Set<TEntity>().AddRangeAsync(entities);
+                //return await _ctx.SaveChangesAsync();
+
+                await _ctx.BulkInsertAsync(entities);
+
+                return entities.Count();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"An error occurred while adding entities: {typeof(TEntity).Name}");
+                return 0;
+            }
+        }
+        else
+        {
+            await _ctx.Set<TEntity>().AddRangeAsync(entities);
+            return 0;
+        }
 
     }
 
@@ -89,10 +132,20 @@ public class BaseEntityEfRepository<TEntity, TKey, TContext> : IBaseEntityAsyncR
         return await _ctx.Set<TEntity>().ToListAsync();
     }
 
+
     public async Task<List<TEntity>> ListAllAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
     {
-        return await ApplySpecification(specification).ToListAsync();
+        try
+        {
+            return await ApplySpecification(specification).ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"An error occurred while fetching entity: {ex.Message}");
+            return new List<TEntity>();
+        }
     }
+
 
     public async Task<TEntity> UpdateAsync(TEntity entity, bool doSave = true, CancellationToken cancellationToken = default)
     {
@@ -107,7 +160,7 @@ public class BaseEntityEfRepository<TEntity, TKey, TContext> : IBaseEntityAsyncR
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"An error occured while updating entity: {typeof(TEntity).Name}");
+                _logger.LogError(ex, $"An error occurred while updating entity: {typeof(TEntity).Name}");
             }
         }
         else

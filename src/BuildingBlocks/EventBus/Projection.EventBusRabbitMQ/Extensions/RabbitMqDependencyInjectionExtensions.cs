@@ -1,4 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.ComponentModel;
+using System.Reflection;
+using MassTransit;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Projection.BuildingBlocks.EventBus.Abstractions;
 using Projection.BuildingBlocks.EventBusRabbitMQ;
 
@@ -15,13 +19,28 @@ public static class RabbitMqDependencyInjectionExtensions
 
     private const string SectionName = "EventBus";
 
-    public static IEventBusBuilder AddRabbitMqEventBus(this IHostApplicationBuilder builder, string connectionName)
+    public static IEventBusBuilder AddRabbitMqEventBus(this IHostApplicationBuilder builder, string connectionName, Assembly assembly)
     {
         ArgumentNullException.ThrowIfNull(builder);
 
-        builder.AddRabbitMQ(connectionName, configureConnectionFactory: factory =>
+        // builder.AddRabbitMQ(connectionName, configureConnectionFactory: factory =>
+        // {
+        //     ((ConnectionFactory)factory).DispatchConsumersAsync = true;
+        // });
+
+        builder.Services.AddMassTransit(config =>
         {
-            ((ConnectionFactory)factory).DispatchConsumersAsync = true;
+            config.AddConsumers(assembly);
+            config.UsingRabbitMq((context, cfg) =>
+            {
+                cfg.Host(builder.Configuration.GetConnectionString(connectionName), "/", h =>
+                {
+                    h.Username("guest");
+                    h.Password("guest");
+                });
+
+                cfg.ConfigureEndpoints(context);
+            });
         });
 
         // RabbitMQ.Client doesn't have built-in support for OpenTelemetry, so we need to add it ourselves
@@ -36,12 +55,14 @@ public static class RabbitMqDependencyInjectionExtensions
 
         // Abstractions on top of the core client API
         builder.Services.AddSingleton<RabbitMQTelemetry>();
-        builder.Services.AddSingleton<IEventBus, RabbitMQEventBus>();
-        // Start consuming messages as soon as the application starts
-        builder.Services.AddSingleton<IHostedService>(sp => (RabbitMQEventBus)sp.GetRequiredService<IEventBus>());
+        builder.Services.AddScoped<IEventBus, RabbitMQEventBus>();
+
+        // // Start consuming messages as soon as the application starts
+        // builder.Services.AddSingleton<IHostedService>(sp => (RabbitMQEventBus)sp.GetRequiredService<IEventBus>());
 
         return new EventBusBuilder(builder.Services);
     }
+
 
     private class EventBusBuilder(IServiceCollection services) : IEventBusBuilder
     {

@@ -44,8 +44,7 @@ public class IntegrationEventLogContext : BaseDbContext
         builder.Property(e => e.EventTypeName)
             .IsRequired();
 
-        builder.Property(e => e.TransactionId)
-            .HasColumnType("uuid");
+        builder.Property(e => e.TransactionId);
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Aspire.Hosting.Lifecycle;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,35 +9,28 @@ namespace Aspire.Hosting;
 
 internal static class Extensions
 {
-    public static IResourceBuilder<TDestination> WithEnvironmentForServiceBinding<TDestination, TSource>(
-        this IResourceBuilder<TDestination> builder,
-        string name,
-        IResourceBuilder<TSource> source,
-        string bindingName = "http")
-        where TDestination : IResourceWithEnvironment
-        where TSource : IResourceWithBindings
+    /// <summary>
+    /// Adds a hook to set the ASPNETCORE_FORWARDEDHEADERS_ENABLED environment variable to true for all projects in the application.
+    /// </summary>
+    public static IDistributedApplicationBuilder AddForwardedHeaders(this IDistributedApplicationBuilder builder)
     {
-        return builder.WithEnvironment(context =>
+        builder.Services.TryAddLifecycleHook<AddForwardHeadersHook>();
+        return builder;
+    }
+
+    private class AddForwardHeadersHook : IDistributedApplicationLifecycleHook
+    {
+        public Task BeforeStartAsync(DistributedApplicationModel appModel, CancellationToken cancellationToken = default)
         {
-            if (context.PublisherName == "manifest")
+            foreach (var p in appModel.GetProjectResources())
             {
-                context.EnvironmentVariables[name] = source.GetEndpoint(bindingName).UriString;
-                return;
+                p.Annotations.Add(new EnvironmentCallbackAnnotation(context =>
+                {
+                    context.EnvironmentVariables["ASPNETCORE_FORWARDEDHEADERS_ENABLED"] = "true";
+                }));
             }
 
-            if (!source.Resource.TryGetServiceBindings(out var bindings))
-            {
-                return;
-            }
-
-            var binding = bindings.FirstOrDefault(b => b.Name == bindingName);
-
-            if (binding?.Port == null)
-            {
-                return;
-            }
-
-            context.EnvironmentVariables[name] = $"{binding.UriScheme}://localhost:{binding.Port}";
-        });
+            return Task.CompletedTask;
+        }
     }
 }

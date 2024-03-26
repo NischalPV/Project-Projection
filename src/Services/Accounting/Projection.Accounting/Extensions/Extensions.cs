@@ -13,6 +13,7 @@ using Projection.Accounting.Core.Entities;
 using Projection.Accounting.Commands;
 using Projection.Accounting.Validations;
 using Projection.Accounting.Features.Accounting.Commands.Validations;
+using Projection.BuildingBlocks.EventBus.Events;
 
 internal static class Extensions
 {
@@ -42,11 +43,18 @@ internal static class Extensions
             
             System.Diagnostics.Debug.WriteLine("AccountingDbContext::conn ->" + connectionString);
 
-            options.UseNpgsql(connectionString, npgsqlOptionsAction: sqlOptions =>
+            //options.UseNpgsql(connectionString, npgsqlOptionsAction: sqlOptions =>
+            //{
+            //    sqlOptions.MigrationsAssembly(typeof(Program).GetTypeInfo().Assembly.GetName().Name);
+            //    sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorCodesToAdd: null);
+            //});
+
+            options.UseSqlServer(connectionString, sqlServerOptionsAction: sqlOptions =>
             {
                 sqlOptions.MigrationsAssembly(typeof(Program).GetTypeInfo().Assembly.GetName().Name);
-                sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorCodesToAdd: null);
+                sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
             });
+
         }, ServiceLifetime.Scoped);
 
         builder.Services.AddDbContext<IntegrationEventLogContext>((serviceProvider, options) =>
@@ -63,10 +71,16 @@ internal static class Extensions
             //var tenancy = JsonConvert.DeserializeObject<TenancySettings>(tenancyJson);
             //var connectionString = tenancy.AccountingDbConnection ?? configuration.GetConnectionString("DefaultConnection");
 
-            options.UseNpgsql(connectionString, npgsqlOptionsAction: sqlOptions =>
+            //options.UseNpgsql(connectionString, npgsqlOptionsAction: sqlOptions =>
+            //{
+            //    sqlOptions.MigrationsAssembly(typeof(Program).GetTypeInfo().Assembly.GetName().Name);
+            //    sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorCodesToAdd: null);
+            //});
+
+            options.UseSqlServer(connectionString, sqlServerOptionsAction: sqlOptions =>
             {
                 sqlOptions.MigrationsAssembly(typeof(Program).GetTypeInfo().Assembly.GetName().Name);
-                sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorCodesToAdd: null);
+                sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
             });
         });
 
@@ -77,7 +91,7 @@ internal static class Extensions
 
         builder.Services.AddTransient(typeof(IApiIntegrationEventService<>), typeof(ApiIntegrationEventService<>));
 
-        builder.AddRabbitMqEventBus("EventBus");
+        builder.AddRabbitMqEventBus("EventBus", Assembly.GetExecutingAssembly());
 
         builder.Services.AddHttpContextAccessor();
 

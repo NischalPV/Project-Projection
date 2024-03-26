@@ -35,8 +35,8 @@ public class AccountCreateCommandHandler : IRequestHandler<AccountCreateCommand,
         {
             Name = request.Name,
             AccountNumber = request.AccountNumber,
-            GSTNumber = request.GSTNumber,
-            PANNumber = request.PANNumber,
+            GSTNumber = request.GSTNumber.ToUpper(),
+            PANNumber = request.PANNumber.ToUpper(),
             Balance = request.Balance,
             CreatedBy = loggedInUserId,
             Description = request.Description,
@@ -45,14 +45,16 @@ public class AccountCreateCommandHandler : IRequestHandler<AccountCreateCommand,
         };
         await _apiIntegrationEventService.AddAndSaveEventAsync(accountCreatedEvent);
 
+        var currency = await _repository.GetCurrencyAsync(request.CurrencyId);
+
         var account = new Account()
         {
             AccountNumber = request.AccountNumber,
-            PANNumber = request.PANNumber,
-            GSTNumber = request.GSTNumber,
+            PANNumber = request.PANNumber.ToUpper(),
+            GSTNumber = request.GSTNumber.ToUpper(),
             CreatedBy = _identityService.GetUserIdentity(),
             Balance = request.Balance,
-            CurrencyId = request.CurrencyId,
+            CurrencyId = currency.Id,
             Name= request.Name,
             Description = request.Description,
             Contacts = request.Contacts.ToList()

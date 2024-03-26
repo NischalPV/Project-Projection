@@ -14,4 +14,9 @@ public class AccountRepository : BaseEntityEfRepository<Account, string, Account
     {
         _logger = logger;
     }
+
+    public async Task<Currency> GetCurrencyAsync(string alphabeticCode)
+    {
+        return await _ctx.Currencies.FirstOrDefaultAsync(c => c.AlphabeticCode == alphabeticCode);
+    }
 }

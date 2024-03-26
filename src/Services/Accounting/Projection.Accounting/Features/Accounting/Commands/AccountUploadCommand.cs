@@ -1,19 +1,17 @@
 ﻿using Projection.Accounting.Core.Entities;
 using Projection.BuildingBlocks.Shared.Commands;
 using System.Runtime.Serialization;
+using static Projection.Accounting.Features.Accounting.Commands.AccountUploadCommandHandler;
 
 namespace Projection.Accounting.Features.Accounting.Commands;
 
 [DataContract]
-public class AccountUploadCommand
+public class AccountUploadCommand : BaseCommand<bool>
 {
     [DataMember]
-    public IFormFile AccountsFile { get; set; }
+    public string AccountsFile { get; set; }
 
-    [DataMember]
-    public string Id { get; set; }
-
-    public AccountUploadCommand(IFormFile file)
+    public AccountUploadCommand(string file)
     {
         Id = Guid.NewGuid().ToString();
         AccountsFile = file;

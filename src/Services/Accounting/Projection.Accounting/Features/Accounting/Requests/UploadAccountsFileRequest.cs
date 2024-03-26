@@ -2,6 +2,6 @@
 
 public record class UploadAccountsFileRequest
 {
-    public IFormFile AccountsFile { get; set; }
+    public string AccountsFile { get; set; }
 
 }

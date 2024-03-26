@@ -6,6 +6,7 @@ using Projection.BuildingBlocks.EventBus.Events;
 using Projection.BuildingBlocks.IntegrationEventLogEF.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Projection.BuildingBlocks.IntegrationEventLogEF;
 
 namespace Projection.Common.IntegrationService;
 
@@ -52,5 +53,10 @@ public class ApiIntegrationEventService<TContext> : IApiIntegrationEventService<
                 await _eventLogService.MarkEventAsFailedAsync(logEvt.EventId);
             }
         }
+    }
+
+    public async Task<IntegrationEventLogEntry> GetIntegrationEventLogEntryAsync(Guid EventId)
+    {
+        return await _eventLogService.GetEventLogByIdAsync(EventId);
     }
 }

@@ -87,6 +87,15 @@ public interface IBaseEntityAsyncRepository<TEntity, TKey, TContext> where TEnti
     Task<bool> IsExists(TEntity entity, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Adds range of entities to database
+    /// </summary>
+    /// <param name="entities">Entities to be added</param>
+    /// <param name="doSave"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>True if succeeds</returns>
+    Task<int> AddRangeAsync(IEnumerable<TEntity> entities, bool doSave = true, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Checks if entity of type TEntity is present in database
     /// </summary>
     /// <param name="id">Id of the entity</param>

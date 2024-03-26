@@ -1,4 +1,4 @@
-namespace Projection.BuildingBlocks.IntegrationEventLogEF.Services;
+﻿namespace Projection.BuildingBlocks.IntegrationEventLogEF.Services;
 
 public interface IIntegrationEventLogService
 {
@@ -7,4 +7,5 @@ public interface IIntegrationEventLogService
     Task MarkEventAsPublishedAsync(Guid eventId);
     Task MarkEventAsInProgressAsync(Guid eventId);
     Task MarkEventAsFailedAsync(Guid eventId);
+    Task<IntegrationEventLogEntry> GetEventLogByIdAsync(Guid eventId);
 }

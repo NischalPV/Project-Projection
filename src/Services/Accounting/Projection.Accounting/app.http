@@ -1,0 +1,5 @@
+# For more info on HTTP files go to https://aka.ms/vs/httpfile
+
+@hostname=localhost
+@port=6002
+GET http://{{hostname}}:{{port}}/api/v1/accounts

@@ -1,0 +1,13 @@
+﻿<h3>Increment</h3>
+<p role="status">Current count: <FluentBadge Appearance="Appearance.Neutral">@currentCount</FluentBadge></p>
+
+<FluentButton Appearance="Appearance.Accent" @onclick="IncreaseCount">Click me</FluentButton>
+
+@code {
+    private int currentCount = 0;
+
+    private void IncreaseCount()
+    {
+        currentCount++;
+    }
+}

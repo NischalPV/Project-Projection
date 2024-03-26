@@ -19,6 +19,7 @@ public class MasterData
         DefaultIdentityRoles(modelBuilder);
         DefaultUsers(modelBuilder);
         DefaultUserRoles(modelBuilder);
+        DefaultUserClaims(modelBuilder);
     }
 
     /// <summary>
@@ -101,6 +102,30 @@ public class MasterData
         foreach (var role in userRoles)
         {
             modelBuilder.Entity<IdentityUserRole<string>>().HasData(role);
+        }
+    }
+
+    /// <summary>
+    /// Creates default user claims for seeded users
+    /// </summary>
+    /// <param name="modelBuilder"></param>
+    private static void DefaultUserClaims(ModelBuilder modelBuilder)
+    {
+        List<IdentityUserClaim<string>> userClaims = new()
+        {
+            // Insert Tenancy Json
+            new IdentityUserClaim<string>()
+            {
+                Id = 1,
+                UserId = "c0aab6ba-cd71-4010-a9dc-e246997d6183",
+                ClaimType = "TenancyJson",
+                ClaimValue = "{\"Id\": \"18ce327c-720e-4c87-b0b1-756eabb37c7b\",\"Name\": \"Tenant1\",\"DefaultConnection\": \"Host=192.168.1.19;Port=5432;Database=Projection.Accounting.Dev.Tenant1;User Id=sa;Password=Radeon1GB#;\"}"
+            }
+        };
+
+        foreach (var claim in userClaims)
+        {
+            modelBuilder.Entity<IdentityUserClaim<string>>().HasData(claim);
         }
     }
 
@@ -200,8 +225,8 @@ public class MasterData
 
         var clientSecrets = Configuration.IdentityServer.GetClientSecrets();
 
-        
-        foreach(var secret in clientSecrets)
+
+        foreach (var secret in clientSecrets)
         {
             modelBuilder.Entity<ClientSecret>().HasData(secret);
         }

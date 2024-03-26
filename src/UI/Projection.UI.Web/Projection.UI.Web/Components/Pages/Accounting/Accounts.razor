@@ -1,0 +1,37 @@
+﻿@page "/accounts"
+@using Microsoft.AspNetCore.Authorization
+@using Projection.UI.Web.Models
+@attribute [StreamRendering]
+@attribute [Authorize]
+@inject AccountingService AccountingService
+@inject UserService UserService
+
+<PageTitle>Accounts</PageTitle>
+<h1>Accounts</h1>
+
+@if (accounts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <FluentDataGrid Id="accountgrid" Items=@FilteredItems GridTemplateColumns="1fr 1fr 1fr 2fr" TGridItem=Account ResizableColumns=true Pagination="@pagination">
+        <PropertyColumn Title="Account Number" Property="@(c => c!.AccountNumber)" Sortable="true" Align=Align.Start>
+            <ColumnOptions>
+                <div class="search-box">
+                    <FluentSearch type="search" Autofocus=true @bind-Value=accountFilter @oninput="HandleAccountFilter" @bind-Value:after="HandleClear" Placeholder="Account Number..." />
+                </div>
+            </ColumnOptions>
+        </PropertyColumn>
+        <PropertyColumn Title="Balance" Property="@(c => c!.BalanceWithCurrency)" Sortable="true" Align=Align.End />
+        <PropertyColumn Title="Created By" Property="@(c => c!.CreatedByUser)" Sortable="true" Align=Align.Start />
+        <PropertyColumn Title="Created Date" Property="@(c => c!.CreatedDate)" Sortable="true" Align=Align.Start />
+        <TemplateColumn Title="Status">
+            <FluentBadge Appearance="@(context.Appearance)">
+                @context.StatusName
+            </FluentBadge>
+        </TemplateColumn>
+    </FluentDataGrid>
+
+    <FluentPaginator State="@pagination" />
+}

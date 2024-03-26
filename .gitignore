@@ -12,3 +12,8 @@ src/*/*/obj/
 */.DS_Store
 src/*/*/*/.DS_Store
 src/*/*/*/*/.DS_Store
+src/*/*/bin/
+bin/*/*
+obj/*/*
+*/obj/*
+*/bin/*

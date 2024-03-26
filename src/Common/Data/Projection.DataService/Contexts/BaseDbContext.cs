@@ -1,6 +1,9 @@
+using Newtonsoft.Json;
+
 namespace Projection.Common.DataService.Contexts;
 
-public class BaseDbContext : DbContext, IUnitOfWork {
+public class BaseDbContext : DbContext, IUnitOfWork
+{
 
     #region Properties
     internal readonly IMediator _mediator;
@@ -14,7 +17,6 @@ public class BaseDbContext : DbContext, IUnitOfWork {
     {
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
 
-
         System.Diagnostics.Debug.WriteLine($"{this.GetType().Name}::ctor ->" + this.GetHashCode());
     }
 
@@ -25,9 +27,10 @@ public class BaseDbContext : DbContext, IUnitOfWork {
     public BaseDbContext(DbContextOptions options) : base(options)
     {
     }
+
     #endregion
 
-    public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
+    public virtual async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
     {
         // Dispatch Domain Events collection. 
         // Choices:

@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Projection.Common.GlobalConstants;
 using Projection.Identity.Models;
 
 namespace Projection.Identity.Data;
@@ -16,7 +13,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.HasDefaultSchema(GlobalConstants.DEFAULT_SCHEMA);
+        builder.HasDefaultSchema(Schema.IDENTITY_SCHEMA);
         base.OnModelCreating(builder);
         MasterData.SeedUsingMigration(builder);
     }

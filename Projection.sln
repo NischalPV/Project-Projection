@@ -91,6 +91,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Projection.UI.Web", "src\UI
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Projection.UI.Web.Client", "src\UI\Projection.UI.Web\Projection.UI.Web.Client\Projection.UI.Web.Client.csproj", "{3A0599DC-7632-4006-8BB2-5C86B6F15ED1}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Orchestration", "Orchestration", "{6D00AC73-309B-4E1A-9A83-DFE9DD579E29}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Projection.Orchestration", "src\Services\Orchestration\Projection.Orchestration\Projection.Orchestration.csproj", "{A2F2257E-915E-49EB-854C-147F145BB1AE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -181,6 +185,10 @@ Global
 		{3A0599DC-7632-4006-8BB2-5C86B6F15ED1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A0599DC-7632-4006-8BB2-5C86B6F15ED1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A0599DC-7632-4006-8BB2-5C86B6F15ED1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2F2257E-915E-49EB-854C-147F145BB1AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2F2257E-915E-49EB-854C-147F145BB1AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2F2257E-915E-49EB-854C-147F145BB1AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2F2257E-915E-49EB-854C-147F145BB1AE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -220,6 +228,8 @@ Global
 		{BB64CE5B-B8DE-422B-BFCA-7D61497681A3} = {62B42932-BA14-4A93-878E-E4334344C368}
 		{BDA77446-809D-4E81-BDA4-9E9F4E772ADB} = {BB64CE5B-B8DE-422B-BFCA-7D61497681A3}
 		{3A0599DC-7632-4006-8BB2-5C86B6F15ED1} = {BB64CE5B-B8DE-422B-BFCA-7D61497681A3}
+		{6D00AC73-309B-4E1A-9A83-DFE9DD579E29} = {F215E910-F370-4F00-9862-2E7DAB6A00AD}
+		{A2F2257E-915E-49EB-854C-147F145BB1AE} = {6D00AC73-309B-4E1A-9A83-DFE9DD579E29}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0035B21A-330F-439E-93AB-736786A92AE5}

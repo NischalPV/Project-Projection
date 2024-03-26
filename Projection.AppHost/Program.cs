@@ -1,26 +1,28 @@
 var builder = DistributedApplication.CreateBuilder(args);
+builder.AddForwardedHeaders();
 
 //var redis = builder.AddRedisContainer("redis");
 //var rabbitMq = builder.AddRabbitMQContainer("EventBus", 5672, "guest");
 
 var identity = builder.AddProject<Projects.Projection_Identity>("projection-identity");
+var idpHttp = identity.GetEndpoint("http");
 
 var accountingApi = builder.AddProject<Projects.Projection_Accounting>("projection-accounting")
     //.WithReference(rabbitMq)
-    .WithEnvironmentForServiceBinding("Identity__Url", identity);
+    .WithEnvironment("Identity__Url", idpHttp);
 
 var apiGateway = builder.AddProject<Projects.Projection_ApiGateway>("projection-apigateway");
 
 var webUi = builder.AddProject<Projects.Projection_UI_Web>("projection-ui-web")
     .WithReference(accountingApi)
     .WithReference(apiGateway)
-    .WithEnvironmentForServiceBinding("IdentityUrl", identity)
+    .WithEnvironment("IdentityUrl", idpHttp)
     .WithLaunchProfile("https");
 
 
-webUi.WithEnvironmentForServiceBinding("CallBackUrl", webUi, bindingName: "https");
+webUi.WithEnvironment("CallBackUrl", webUi.GetEndpoint("https"));
 
-identity.WithEnvironmentForServiceBinding("webUiClient", webUi, bindingName: "https");
+identity.WithEnvironment("webUiClient", webUi.GetEndpoint("https"));
 
 
 

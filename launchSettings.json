@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "projection.accounting": "StartDebugging",
+        "projection.apigateway": "StartDebugging",
+        "projection.identity": "StartDebugging",
+        "projection.ui.web": "StartDebugging"
+      }
+    }
+  }
+}

@@ -1,9 +1,10 @@
+using Projection.Common.GlobalConstants;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Projection.Common.BaseEntities;
 
 
-[Table("Statuses", Schema = "public")]
+[Table("Statuses", Schema = Schema.DEFAULT_SCHEMA)]
 public record Status
 {
     public int Id { get; set; }

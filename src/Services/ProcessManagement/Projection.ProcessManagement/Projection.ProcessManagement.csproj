@@ -1,0 +1,60 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <!--<Nullable>enable</Nullable>-->
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>c6140959-9a0c-4f98-ab9a-32dfe41dcc0c</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..\..\..</DockerfileContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" />
+    <PackageReference Include="Microsoft.AspNetCore.Grpc.Swagger" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
+    <PackageReference Include="Asp.Versioning.Mvc" />
+    <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" />
+    <PackageReference Include="CsvHelper" />
+    <PackageReference Include="EFCore.BulkExtensions" />
+    <PackageReference Include="FluentValidation.AspNetCore" />
+    <PackageReference Include="Google.Cloud.Storage.V1" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Abstractions" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+    <PackageReference Include="Serilog.AspNetCore" />
+    <PackageReference Include="Serilog.Enrichers.Environment" />
+    <PackageReference Include="Serilog.Settings.Configuration" />
+    <PackageReference Include="Serilog.Sinks.Console" />
+    <PackageReference Include="Serilog.Sinks.Http" />
+    <PackageReference Include="Serilog.Sinks.Seq" />
+    <PackageReference Include="Swashbuckle.AspNetCore" />
+    <PackageReference Include="MassTransit" />
+    <PackageReference Include="MassTransit.RabbitMQ" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Projection.ServiceDefaults\Projection.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\EventBus\Projection.EventBusRabbitMQ\Projection.EventBusRabbitMQ.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\EventBus\Projection.EventBus\Projection.EventBus.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\EventBus\Projection.IntegrationEventLogEF\Projection.IntegrationEventLogEF.csproj" />
+    <ProjectReference Include="..\..\..\Common\Behaviours\Projection.Behaviours\Projection.Behaviours.csproj" />
+    <ProjectReference Include="..\..\..\Common\Data\Projection.DataService\Projection.DataService.csproj" />
+    <ProjectReference Include="..\..\..\Common\Entities\Projection.BaseEntities\Projection.BaseEntities.csproj" />
+    <ProjectReference Include="..\..\..\Common\Proto\Projection.Protos\Projection.Protos.csproj" />
+    <ProjectReference Include="..\Projection.ProcessManagement.Core\Projection.ProcessManagement.Core.csproj" />
+    <ProjectReference Include="..\Projection.ProcessManagement.Infrastructure\Projection.ProcessManagement.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="..\..\..\Common\Proto\Projection.Protos\Protos\ProcessManagement\process.proto" GrpcServices="Server">
+      <Link>Protos\process.proto</Link>
+    </Protobuf>
+  </ItemGroup>
+
+</Project>

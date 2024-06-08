@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+import "google/protobuf/any.proto";
+
+option csharp_namespace = "Projection.ProcessManagement.Grpc";
+
+package Projection.ProcessManagement;
+
+service Processes {
+	rpc ListAllAsync(ListAllRequest) returns (ResultViewModel) {}
+	rpc GetAsync(GetRequest) returns (ResultViewModel) {}
+	rpc CreateAsync(CreateRequest) returns (ResultViewModel) {}
+	rpc UpdateAsync(UpdateRequest) returns (ResultViewModel) {}
+	rpc DeleteAsync(DeleteRequest) returns (ResultViewModel) {}
+}
+
+message ListAllRequest {
+}
+
+message GetRequest {
+	string id = 1;
+}
+
+message CreateRequest {
+	Process process = 1;
+}
+
+
+message UpdateRequest {
+	Process process = 1;
+}
+
+message DeleteRequest {
+	string id = 2;
+}
+
+message Process {
+	string name = 1;
+	string description = 2;
+	bool isMandatory = 3;
+	bool isAutomated = 4;
+	map<string, google.protobuf.Any> additionalAttributes = 5;
+}
+
+message ResultViewModel {
+	bool isSuccess = 1;
+	ResultMessage result = 2;
+	google.protobuf.Any data = 3;  
+	int32 totalCount = 4;
+	int32 pageCount = 5;
+	int32 pageNumber = 6;
+	int32 pageSize = 7;
+}
+
+message ResultMessage {
+	string message = 1;
+	int32 code = 2;
+	string description = 3;
+	string type = 4;
+	string field = 5;
+}

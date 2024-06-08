@@ -10,6 +10,7 @@ using Projection.Accounting.Features.Accounting.Services;
 using Projection.Accounting.Features.Accounting.Specifications;
 using Projection.BuildingBlocks.EventBus.Extensions;
 using Projection.BuildingBlocks.Shared.Models.ViewModels;
+using Projection.GlobalConstants;
 using System.Globalization;
 using System.Security.Principal;
 using System.Text;
@@ -21,7 +22,7 @@ public static class AccountsApi
 {
     public static RouteGroupBuilder MapAccountsApi(this RouteGroupBuilder app)
     {
-        app.MapGet("/{pageIndex:int}", GetAccountsAsync);
+        app.MapGet("/", GetAccountsAsync);
         app.MapGet("/{id:guid}", GetAccountAsync);
         app.MapPost("/", CreateAccountAsync);
         app.MapPut("/{id}", UpdateAccountAsync);
@@ -36,9 +37,11 @@ public static class AccountsApi
     /// </summary>
     /// <param name="services"></param>
     /// <returns></returns>
-    public static async Task<Ok<ResultViewModel<List<Account>>>> GetAccountsAsync(int pageIndex, [AsParameters] AccountServices services)
+    public static async Task<Ok<ResultViewModel<List<Account>>>> GetAccountsAsync([FromHeader] int pageIndex, [FromHeader] int pageSize, [AsParameters] AccountServices services)
     {
-        var accounts = await services.Repository.ListAllAsync(new AccountWithStatusSpecification(pageIndex));
+        var accounts = await services.Repository.ListAllAsync(new AccountWithStatusSpecification(pageIndex, pageSize));
+
+        var totalAccounts = await services.Repository.CountAsync(new AccountWithTransactionsSpecification());
 
         ResultViewModel<List<Account>> result = new()
         {
@@ -52,10 +55,10 @@ public static class AccountsApi
                 Message = "Success",
                 Type = "Success"
             },
-            PageCount = 1,
-            PageNumber = 1,
-            PageSize = 25,
-            TotalCount = accounts.Count,
+            PageCount = (int)Math.Ceiling((double)totalAccounts / pageSize),
+            PageNumber = pageIndex,
+            PageSize = pageSize,
+            TotalCount = totalAccounts,
         };
 
         return TypedResults.Ok(result);
@@ -376,7 +379,7 @@ public static class AccountsApi
                 Message = result == true ? $"File uploaded successfully." : "File upload failed.",
                 Type = "Success"
             };
-            
+
 
             return TypedResults.Created(String.Empty, response);
         }

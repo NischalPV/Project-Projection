@@ -34,17 +34,17 @@ public class Startup
 
         services.AddDbContext<ApplicationDbContext>(options =>
 
-        //options.UseNpgsql(connectionString, npgsqlOptionsAction: sqlOptions =>
-        //{
-        //    sqlOptions.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
-        //    sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorCodesToAdd: null);
-        //})
-
-        options.UseSqlServer(connectionString, sqlServerOptionsAction: sqlOptions =>
+        options.UseNpgsql(connectionString, npgsqlOptionsAction: sqlOptions =>
         {
             sqlOptions.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
-            sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+            sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorCodesToAdd: null);
         })
+
+        //options.UseSqlServer(connectionString, sqlServerOptionsAction: sqlOptions =>
+        //{
+        //    sqlOptions.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
+        //    sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+        //})
         );
 
 
@@ -74,39 +74,39 @@ public class Startup
         .AddAspNetIdentity<ApplicationUser>()
         .AddConfigurationStore<Data.ConfigurationDbContext>(options =>
         {
-            //options.ConfigureDbContext = builder => builder.UseNpgsql(connectionString,
-            //    npgsqlOptionsAction: sqlOptions =>
-            //    {
-            //        sqlOptions.MigrationsAssembly(migrationsAssembly);
-            //        //Configuring Connection Resiliency: https://docs.microsoft.com/en-us/ef/core/miscellaneous/connection-resiliency 
-            //        sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorCodesToAdd: null);
-            //    });
-
-            options.ConfigureDbContext = builder => builder.UseSqlServer(connectionString,
-                sqlServerOptionsAction: sqlOptions =>
+            options.ConfigureDbContext = builder => builder.UseNpgsql(connectionString,
+                npgsqlOptionsAction: sqlOptions =>
                 {
                     sqlOptions.MigrationsAssembly(migrationsAssembly);
                     //Configuring Connection Resiliency: https://docs.microsoft.com/en-us/ef/core/miscellaneous/connection-resiliency 
-                    sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+                    sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorCodesToAdd: null);
                 });
+
+            //options.ConfigureDbContext = builder => builder.UseSqlServer(connectionString,
+            //    sqlServerOptionsAction: sqlOptions =>
+            //    {
+            //        sqlOptions.MigrationsAssembly(migrationsAssembly);
+            //        //Configuring Connection Resiliency: https://docs.microsoft.com/en-us/ef/core/miscellaneous/connection-resiliency 
+            //        sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+            //    });
         })
         .AddOperationalStore<Data.PersistedGrantDbContext>(options =>
         {
-            //options.ConfigureDbContext = builder => builder.UseNpgsql(connectionString,
-            //    npgsqlOptionsAction: sqlOptions =>
-            //    {
-            //        sqlOptions.MigrationsAssembly(migrationsAssembly);
-            //        //Configuring Connection Resiliency: https://docs.microsoft.com/en-us/ef/core/miscellaneous/connection-resiliency 
-            //        sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorCodesToAdd: null);
-            //    });
-
-            options.ConfigureDbContext = builder => builder.UseSqlServer(connectionString,
-                sqlServerOptionsAction: sqlOptions =>
+            options.ConfigureDbContext = builder => builder.UseNpgsql(connectionString,
+                npgsqlOptionsAction: sqlOptions =>
                 {
                     sqlOptions.MigrationsAssembly(migrationsAssembly);
                     //Configuring Connection Resiliency: https://docs.microsoft.com/en-us/ef/core/miscellaneous/connection-resiliency 
-                    sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+                    sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorCodesToAdd: null);
                 });
+
+            //options.ConfigureDbContext = builder => builder.UseSqlServer(connectionString,
+            //    sqlServerOptionsAction: sqlOptions =>
+            //    {
+            //        sqlOptions.MigrationsAssembly(migrationsAssembly);
+            //        //Configuring Connection Resiliency: https://docs.microsoft.com/en-us/ef/core/miscellaneous/connection-resiliency 
+            //        sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+            //    });
         })
         .Services.AddTransient<IProfileService, ProfileService>();
         // .AddSingleton<OperationalStoreOptions>();

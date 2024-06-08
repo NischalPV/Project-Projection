@@ -15,7 +15,7 @@
 }
 else
 {
-    <FluentDataGrid Id="accountgrid" Items=@FilteredItems GridTemplateColumns="1fr 1fr 1fr 2fr" TGridItem=Account ResizableColumns=true Pagination="@pagination">
+    <FluentDataGrid @ref="grid" Id="accountgrid" Items=@FilteredItems GridTemplateColumns="1fr 1fr 1fr 2fr" TGridItem=Account ResizableColumns=true Pagination="@pagination">
         <PropertyColumn Title="Account Number" Property="@(c => c!.AccountNumber)" Sortable="true" Align=Align.Start>
             <ColumnOptions>
                 <div class="search-box">

@@ -8,9 +8,11 @@ public class AccountingService(HttpClient httpClient)
 {
     private readonly string remoteServiceBaseUrl = "/accounting/api/accounts";
 
-    public Task<ResultViewModel<List<Account>>> GetAccounts()
+    public Task<ResultViewModel<List<Account>>> GetAccounts(int pageIndex, int pageSize)
     {
-        var accountData = httpClient.GetFromJsonAsync<ResultViewModel<List<Account>>>(remoteServiceBaseUrl)!;
+        httpClient.DefaultRequestHeaders.Add("pageIndex", $"{pageIndex}");
+        httpClient.DefaultRequestHeaders.Add("pageSize", $"{pageSize}");
+        var accountData = httpClient.GetFromJsonAsync<ResultViewModel<List<Account>>>($"{remoteServiceBaseUrl}")!;
 
         return accountData;
     }

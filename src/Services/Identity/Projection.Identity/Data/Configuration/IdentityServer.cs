@@ -109,6 +109,17 @@ public class IdentityServer
                     Id = 1,
                     Created = new DateTime(2023, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddTicks(0),
                 },
+                new ApiScope()
+                {
+                    Name = "ProcessAPI",
+                    DisplayName = "Process Management API Scope",
+                    Enabled = true,
+                    Required = false,
+                    Emphasize = false,
+                    ShowInDiscoveryDocument = true,
+                    Id = 2,
+                    Created = new DateTime(2023, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddTicks(0),
+                },
             };
     }
 
@@ -124,6 +135,12 @@ public class IdentityServer
                     Id = 1,
                     ApiResourceId = 1,
                     Scope = "AccountingAPI"
+                },
+                new ApiResourceScope()
+                {
+                    Id = 2,
+                    ApiResourceId = 1,
+                    Scope = "ProcessAPI"
                 },
             };
     }
@@ -334,8 +351,8 @@ public class IdentityServer
                     ClientId = "projection-accounting-api",
                     ProtocolType = "oidc",
                     RequireClientSecret = true,
-                    ClientName = "Projection API Swagger UI",
-                    Description = "Projection API Swagger UI for Development",
+                    ClientName = "Projection Accounting API Swagger UI",
+                    Description = "Projection Accounting API Swagger UI for Development",
                     ClientUri = null,
                     LogoUri = null,
                     RequireConsent = false,
@@ -382,8 +399,104 @@ public class IdentityServer
                     ClientId = "projection-accounting-api--prod",
                     ProtocolType = "oidc",
                     RequireClientSecret = true,
-                    ClientName = "Projection API Swagger UI",
-                    Description = "Projection API Swagger UI for Production",
+                    ClientName = "Projection Accounting API Swagger UI",
+                    Description = "Projection Accounting API Swagger UI for Production",
+                    ClientUri = null,
+                    LogoUri = null,
+                    RequireConsent = false,
+                    AllowRememberConsent = true,
+                    AlwaysIncludeUserClaimsInIdToken = false,
+                    RequirePkce = true,
+                    AllowPlainTextPkce = false,
+                    RequireRequestObject = false,
+                    AllowAccessTokensViaBrowser = true,
+                    FrontChannelLogoutSessionRequired = true,
+                    FrontChannelLogoutUri = null,
+                    BackChannelLogoutSessionRequired = true,
+                    BackChannelLogoutUri = null,
+                    AllowOfflineAccess = false,
+                    IdentityTokenLifetime = 300,
+                    AllowedIdentityTokenSigningAlgorithms = null,
+                    AccessTokenLifetime = 3600,
+                    AuthorizationCodeLifetime = 300,
+                    ConsentLifetime = null,
+                    AbsoluteRefreshTokenLifetime = 2592000,
+                    SlidingRefreshTokenLifetime = 1296000,
+                    RefreshTokenUsage = 1,
+                    UpdateAccessTokenClaimsOnRefresh = false,
+                    RefreshTokenExpiration = 1,
+                    AccessTokenType = 0,
+                    EnableLocalLogin = true,
+                    IncludeJwtId = true,
+                    AlwaysSendClientClaims = false,
+                    ClientClaimsPrefix = "client_",
+                    PairWiseSubjectSalt = null,
+                    Created = new DateTime(2022, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddTicks(0),
+                    Updated = null,
+                    LastAccessed = null,
+                    UserSsoLifetime = null,
+                    UserCodeType = null,
+                    DeviceCodeLifetime = 300,
+                    NonEditable = false,
+                },
+
+                new Client()
+                {
+                    Id = 5,
+                    Enabled = true,
+                    ClientId = "projection-process-api",
+                    ProtocolType = "oidc",
+                    RequireClientSecret = true,
+                    ClientName = "Projection Process Management API Swagger UI",
+                    Description = "Projection Process Management API Swagger UI for Development",
+                    ClientUri = null,
+                    LogoUri = null,
+                    RequireConsent = false,
+                    AllowRememberConsent = true,
+                    AlwaysIncludeUserClaimsInIdToken = false,
+                    RequirePkce = false,
+                    AllowPlainTextPkce = false,
+                    RequireRequestObject = false,
+                    AllowAccessTokensViaBrowser = true,
+                    FrontChannelLogoutSessionRequired = true,
+                    FrontChannelLogoutUri = null,
+                    BackChannelLogoutSessionRequired = true,
+                    BackChannelLogoutUri = null,
+                    AllowOfflineAccess = false,
+                    IdentityTokenLifetime = 3600,
+                    AllowedIdentityTokenSigningAlgorithms = null,
+                    AccessTokenLifetime = 3600,
+                    AuthorizationCodeLifetime = 300,
+                    ConsentLifetime = null,
+                    AbsoluteRefreshTokenLifetime = 2592000,
+                    SlidingRefreshTokenLifetime = 1296000,
+                    RefreshTokenUsage = 1,
+                    UpdateAccessTokenClaimsOnRefresh = false,
+                    RefreshTokenExpiration = 1,
+                    AccessTokenType = 0,
+                    EnableLocalLogin = true,
+                    IncludeJwtId = true,
+                    AlwaysSendClientClaims = false,
+                    ClientClaimsPrefix = "client_",
+                    PairWiseSubjectSalt = null,
+                    Created = new DateTime(2022, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddTicks(0),
+                    Updated = null,
+                    LastAccessed = null,
+                    UserSsoLifetime = null,
+                    UserCodeType = null,
+                    DeviceCodeLifetime = 300,
+                    NonEditable = false,
+                },
+
+                new Client()
+                {
+                    Id = 6,
+                    Enabled = true,
+                    ClientId = "projection-process-api--prod",
+                    ProtocolType = "oidc",
+                    RequireClientSecret = true,
+                    ClientName = "Projection Process Management API Swagger UI",
+                    Description = "Projection Process Management API Swagger UI for Production",
                     ClientUri = null,
                     LogoUri = null,
                     RequireConsent = false,
@@ -456,7 +569,19 @@ public class IdentityServer
                 {
                     Id = 4,
                     ClientId = 4,
-                    Origin = $"https://projection360-api.azurewebsites.net"
+                    Origin = $"https://projection360-accounting-api.azurewebsites.net"
+                },
+                new ClientCorsOrigin()
+                {
+                    Id = 5,
+                    ClientId = 5,
+                    Origin = $"http://localhost:5078"
+                },
+                new ClientCorsOrigin()
+                {
+                    Id = 6,
+                    ClientId = 6,
+                    Origin = $"https://projection360-process-api.azurewebsites.net"
                 },
             };
     }
@@ -511,7 +636,7 @@ public class IdentityServer
                 {
                     Id = 7,
                     ClientId = 3,
-                    Scope = "API"
+                    Scope = "AccountingAPI"
                 },
                 new ClientScope()
                 {
@@ -524,6 +649,30 @@ public class IdentityServer
                     Id = 9,
                     ClientId = 1,
                     Scope = Duende.IdentityServer.IdentityServerConstants.StandardScopes.OfflineAccess
+                },
+                new ClientScope()
+                {
+                    Id = 10,
+                    ClientId = 1,
+                    Scope = "ProcessAPI"
+                },
+                new ClientScope()
+                {
+                    Id = 11,
+                    ClientId = 3,
+                    Scope = "ProcessAPI"
+                },
+                new ClientScope()
+                {
+                    Id = 12,
+                    ClientId = 5,
+                    Scope = "ProcessAPI"
+                },
+                new ClientScope()
+                {
+                    Id = 13,
+                    ClientId = 6,
+                    Scope = "ProcessAPI"
                 },
             };
     }
@@ -560,6 +709,18 @@ public class IdentityServer
                     ClientId = 4,
                     GrantType = "implicit"
                 },
+                new ClientGrantType()
+                {
+                    Id = 5,
+                    ClientId = 5,
+                    GrantType = "implicit"
+                },
+                new ClientGrantType()
+                {
+                    Id = 6,
+                    ClientId = 6,
+                    GrantType = "implicit"
+                },
             };
     }
 
@@ -593,9 +754,21 @@ public class IdentityServer
                 {
                     Id = 4,
                     ClientId = 4,
-                    PostLogoutRedirectUri = $"https://projection-api.azurewebsites.net/swagger/"
+                    PostLogoutRedirectUri = $"https://projection-accounting-api.azurewebsites.net/swagger/"
                 },
-                
+                new ClientPostLogoutRedirectUri()
+                {
+                    Id = 5,
+                    ClientId = 5,
+                    PostLogoutRedirectUri = $"http://localhost:5078/swagger/"
+                },
+                new ClientPostLogoutRedirectUri()
+                {
+                    Id = 6,
+                    ClientId = 6,
+                    PostLogoutRedirectUri = $"https://projection360-process-api.azurewebsites.net/swagger/"
+                },
+
             };
     }
 
@@ -629,7 +802,19 @@ public class IdentityServer
                 {
                     Id = 4,
                     ClientId = 4,
-                    RedirectUri = $"https://projection360-api.azurewebsites.net/swagger/oauth2-redirect.html"
+                    RedirectUri = $"https://projection360-accounting-api.azurewebsites.net/swagger/oauth2-redirect.html"
+                },
+                new ClientRedirectUri()
+                {
+                    Id = 5,
+                    ClientId = 5,
+                    RedirectUri = $"http://localhost:5078/swagger/oauth2-redirect.html"
+                },
+                new ClientRedirectUri()
+                {
+                    Id = 6,
+                    ClientId = 6,
+                    RedirectUri = $"https://projection360-process-api.azurewebsites.net/swagger/oauth2-redirect.html"
                 },
             };
 
@@ -649,6 +834,12 @@ public class IdentityServer
             {
                 Id = 2,
                 ClientId = 2,
+                Value = "projection@2023".Sha256(),
+            },
+            new ClientSecret()
+            {
+                Id = 4,
+                ClientId = 4,
                 Value = "projection@2023".Sha256(),
             }
         };

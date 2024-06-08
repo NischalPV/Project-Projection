@@ -1,0 +1,108 @@
+# Save the output of this file and use kubectl create -f to import
+# it into Kubernetes.
+#
+# Created with podman-4.6.1
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    bind-mount-options: /mnt/sdc/projection360/mongodb/data:z
+  creationTimestamp: "2024-03-28T11:32:14Z"
+  labels:
+    app: Projection360
+  name: Projection360
+spec:
+  containers:
+    - args:
+        - redis-server
+      image: docker.io/library/redis:latest
+      name: Redis-Server
+      ports:
+        - containerPort: 1433
+          hostPort: 1433
+        - containerPort: 5672
+          hostPort: 5672
+        - containerPort: 6379
+          hostPort: 6379
+        - containerPort: 15672
+          hostPort: 15672
+        - containerPort: 27017
+          hostPort: 27017
+      resources:
+        limits:
+          memory: 512Mi
+          cpu: "1"
+      tty: true
+      volumeMounts:
+        - mountPath: /data
+          name: 13ffe21883e99905bc3b9634c7477b346c5f4a53e8c40afff2587d748fbbfbc4-pvc
+    - args:
+        - rabbitmq-server
+      image: docker.io/library/rabbitmq:management
+      name: RabbitMQ
+      resources:
+        limits:
+          memory: 512Mi
+          cpu: "1"
+      tty: true
+      volumeMounts:
+        - mountPath: /var/lib/rabbitmq
+          name: 34a8d3c9f16648d8bb24c7b047c376fef9225007c945378b8239bd5c74a145f1-pvc
+    - args:
+        - /opt/mssql/bin/sqlservr
+      env:
+        - name: ACCEPT_EULA
+          value: "Y"
+        - name: MSSQL_SA_PASSWORD
+          value: Radeon@1GB#
+      image: mcr.microsoft.com/mssql/server:2022-latest
+      name: SQL-Server-2022
+      resources:
+        limits:
+          memory: 2Gi
+          cpu: "2"
+      securityContext: {}
+      tty: true
+      volumeMounts:
+        - mountPath: /var/opt/mssql
+          name: mnt-sdc-projection360-sql-server-2022-host-0
+    - args:
+        - mongod
+      env:
+        - name: MONGODB_INITDB_ROOT_USERNAME
+          value: sa
+        - name: MONGODB_INITDB_ROOT_PASSWORD
+          value: Radeon@1GB#
+      image: docker.io/mongodb/mongodb-community-server:latest
+      name: MongoDB
+      resources:
+        limits:
+          memory: 2Gi
+          cpu: "2"
+      securityContext: {}
+      tty: true
+      volumeMounts:
+        - mountPath: /data/db
+          name: mnt-sdc-projection360-mongodb-data-host-1
+        - mountPath: /data/configdb
+          name: 5000b62c988fc7c12e13166058449a9c4a12bb126fe04d79a80d95cdfebb65bd-pvc
+
+  volumes:
+  - name: 5000b62c988fc7c12e13166058449a9c4a12bb126fe04d79a80d95cdfebb65bd-pvc
+    persistentVolumeClaim:
+      claimName: 5000b62c988fc7c12e13166058449a9c4a12bb126fe04d79a80d95cdfebb65bd
+  - hostPath:
+      path: /mnt/sdc/projection360/sql-server-2022
+      type: Directory
+    name: mnt-sdc-projection360-sql-server-2022-host-0
+  - hostPath:
+      path: /mnt/sdc/projection360/mongodb/data
+      type: Directory
+    name: mnt-sdc-projection360-mongodb-data-host-1
+  - name: 13ffe21883e99905bc3b9634c7477b346c5f4a53e8c40afff2587d748fbbfbc4-pvc
+    persistentVolumeClaim:
+      claimName: 13ffe21883e99905bc3b9634c7477b346c5f4a53e8c40afff2587d748fbbfbc4
+  - name: 34a8d3c9f16648d8bb24c7b047c376fef9225007c945378b8239bd5c74a145f1-pvc
+    persistentVolumeClaim:
+      claimName: 34a8d3c9f16648d8bb24c7b047c376fef9225007c945378b8239bd5c74a145f1
+

@@ -1,25 +1,8 @@
 using Asp.Versioning;
 using Asp.Versioning.Conventions;
-using Microsoft.AspNetCore.Connections;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Newtonsoft.Json;
 using Projection.Accounting;
 using Projection.Accounting.Features.Accounting.Apis;
-using Projection.Accounting.Infrastructure.Data;
-using Projection.BuildingBlocks.EventBus;
-using Projection.BuildingBlocks.EventBus.Abstractions;
-using Projection.BuildingBlocks.EventBusRabbitMQ;
-using Projection.BuildingBlocks.IntegrationEventLogEF;
-using Projection.BuildingBlocks.IntegrationEventLogEF.Services;
-using Projection.Common.BaseEntities;
-using RabbitMQ.Client;
 using Serilog;
-using System;
-using System.Configuration;
 
 using ConfigurationManager = Microsoft.Extensions.Configuration.ConfigurationManager;
 

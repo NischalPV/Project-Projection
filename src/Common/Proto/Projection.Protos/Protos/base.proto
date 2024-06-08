@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option csharp_namespace = "Projection.Common.Protos";
+package Projection.Common.Protos;
+
+message ResultViewModel {
+	bool isSuccess = 1;
+	ResultMessage result = 2;
+	google.protobuf.Any data = 3;  
+	int32 totalCount = 4;
+	int32 pageCount = 5;
+	int32 pageNumber = 6;
+	int32 pageSize = 7;
+}
+
+message ResultMessage {
+	string message = 1;
+	int32 code = 2;
+	string description = 3;
+	string type = 4;
+	string field = 5;
+}

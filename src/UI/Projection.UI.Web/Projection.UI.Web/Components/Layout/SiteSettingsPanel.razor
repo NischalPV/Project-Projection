@@ -23,14 +23,15 @@
 
         <FluentSelect Label="Color"
                       Style="margin-bottom: 30px;"
-                      Items="@AllOfficeColors"
+                      Width="100%"
+                      Items="@(OfficeColorUtilities.AllColors.Cast<OfficeColor?>())"
                       Height="200px"
                       @bind-SelectedOption="@OfficeColor">
             <OptionTemplate>
                 <FluentStack>
                     <FluentIcon Value="@(new Icons.Filled.Size20.RectangleLandscape())"
                                 Color="Color.Custom"
-                                CustomColor="@context.ToAttributeValue()" />
+                                CustomColor="@GetCustomColor(@context)" />
                     <FluentLabel>@context</FluentLabel>
                 </FluentStack>
             </OptionTemplate>
@@ -40,7 +41,8 @@
                       Style="margin-bottom: 30px;"
                       CheckedMessage="Left to Right"
                       UncheckedMessage="Right to Left"
-                      @bind-Value="@Direction" />
+                      Value="@_ltr"
+                      ValueChanged="HandleDirectionChanged" />
         <FluentLabel>
             These values (except for Direction) are persisted in the LocalStorage.
             You can recover this style during your next visits.

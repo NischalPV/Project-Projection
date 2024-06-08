@@ -4,7 +4,7 @@
       "projects": [
         "src\\Services\\Identity\\Projection.Identity\\Projection.Identity.csproj",
         "src\\Services\\Accounting\\Projection.Accounting\\Projection.Accounting.csproj",
-        "src\\\\Services\\Orchestration\\Projection.Orchestration\\Projection.Orchestration.csproj"
+        "src\\Services\\Orchestration\\Projection.Orchestration\\Projection.Orchestration.csproj"
       ]
     }
 }
